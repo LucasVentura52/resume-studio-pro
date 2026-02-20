@@ -26,8 +26,11 @@ const ensureString = (value) => (typeof value === 'string' ? value : '')
 
 const createStorageId = () => `cv_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`
 
-const sortByUpdated = (records) =>
-  [...records].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+const sortByUpdatedDesc = (left, right) => new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime()
+const sortRecordsInPlace = () => {
+  state.records.sort(sortByUpdatedDesc)
+}
+const dateTimeFormatter = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
 
 const normalizeRecord = (raw = {}) => {
   const data = normalizeResumeData(raw.data)
@@ -65,6 +68,7 @@ const hydrate = () => {
     const raw = window.localStorage.getItem(STORAGE_KEY)
     const parsed = raw ? JSON.parse(raw) : []
     state.records = Array.isArray(parsed) ? parsed.map((item) => normalizeRecord(item)) : []
+    sortRecordsInPlace()
   } catch (error) {
     console.error(error)
     state.records = []
@@ -73,7 +77,7 @@ const hydrate = () => {
   state.hydrated = true
 }
 
-const records = computed(() => sortByUpdated(state.records))
+const records = computed(() => state.records)
 
 const getRecordById = (recordId) => state.records.find((record) => record.id === recordId) ?? null
 
@@ -121,8 +125,9 @@ const saveEditorModel = (model) => {
         data: normalizedData,
         updatedAt: now,
       }
+      sortRecordsInPlace()
       persist()
-      return state.records[index]
+      return state.records.find((item) => item.id === id) || null
     }
   }
 
@@ -138,6 +143,7 @@ const saveEditorModel = (model) => {
   }
 
   state.records.push(created)
+  sortRecordsInPlace()
   persist()
   return created
 }
@@ -169,14 +175,15 @@ const duplicateRecord = (recordId) => {
   }
 
   state.records.push(duplicated)
+  sortRecordsInPlace()
   persist()
   return duplicated
 }
 
 const formatRecordDateTime = (value) => {
   const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return 'data invalida'
-  return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(date)
+  if (Number.isNaN(date.getTime())) return 'data inválida'
+  return dateTimeFormatter.format(date)
 }
 
 export const useResumeManager = () => {

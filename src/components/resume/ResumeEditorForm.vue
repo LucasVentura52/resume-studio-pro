@@ -39,6 +39,9 @@ const openPanelsModel = computed({
   set: (value) => emit('update:openPanels', value),
 })
 const fieldDensity = computed(() => (display.smAndDown.value ? 'comfortable' : 'compact'))
+const MAX_PHOTO_DIMENSION = 560
+const PHOTO_EXPORT_MIME = 'image/jpeg'
+const PHOTO_EXPORT_QUALITY = 0.86
 
 const addItem = (collection, factory) => {
   collection.push(factory())
@@ -161,6 +164,34 @@ const fileToDataUrl = (file) =>
     reader.readAsDataURL(file)
   })
 
+const loadImage = (src) =>
+  new Promise((resolve, reject) => {
+    const image = new Image()
+    image.onload = () => resolve(image)
+    image.onerror = () => reject(new Error('Falha ao processar imagem'))
+    image.src = src
+  })
+
+const optimizeImageDataUrl = async (dataUrl) => {
+  const image = await loadImage(dataUrl)
+  const longestSide = Math.max(image.naturalWidth || 0, image.naturalHeight || 0)
+  if (!longestSide) return dataUrl
+
+  const scale = longestSide > MAX_PHOTO_DIMENSION ? MAX_PHOTO_DIMENSION / longestSide : 1
+  const width = Math.max(1, Math.round((image.naturalWidth || 1) * scale))
+  const height = Math.max(1, Math.round((image.naturalHeight || 1) * scale))
+
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+
+  const context = canvas.getContext('2d')
+  if (!context) return dataUrl
+
+  context.drawImage(image, 0, 0, width, height)
+  return canvas.toDataURL(PHOTO_EXPORT_MIME, PHOTO_EXPORT_QUALITY)
+}
+
 const handlePhotoUpload = async (payload) => {
   const file = Array.isArray(payload) ? payload[0] : payload
 
@@ -178,7 +209,8 @@ const handlePhotoUpload = async (payload) => {
   }
 
   try {
-    props.resume.personal.photoData = await fileToDataUrl(file)
+    const rawDataUrl = await fileToDataUrl(file)
+    props.resume.personal.photoData = await optimizeImageDataUrl(rawDataUrl)
   } catch (error) {
     console.error(error)
     feedback.error({
@@ -269,14 +301,6 @@ const clearPhoto = () => {
               @update:model-value="handlePhotoUpload"
             />
           </v-col>
-          <v-col cols="12" sm="6">
-            <v-text-field
-              v-model="resume.personal.photoUrl"
-              label="Ou URL da foto (opcional)"
-              :density="fieldDensity"
-              variant="outlined"
-            />
-          </v-col>
           <v-col cols="12">
             <div class="d-flex align-center ga-2">
               <v-btn
@@ -289,7 +313,7 @@ const clearPhoto = () => {
               >
                 Remover foto
               </v-btn>
-              <span class="text-caption text-medium-emphasis">A foto enviada tem prioridade sobre a URL.</span>
+              <span class="text-caption text-medium-emphasis">Use uma imagem profissional em PNG, JPG ou WEBP.</span>
             </div>
           </v-col>
         </v-row>
@@ -352,10 +376,10 @@ const clearPhoto = () => {
             <v-col cols="12" sm="6">
               <v-text-field v-model="experience.location" label="Local" :density="fieldDensity" variant="outlined" />
             </v-col>
-            <v-col cols="6" sm="3">
+            <v-col cols="12" sm="3">
               <v-text-field v-model="experience.start" label="Início" type="month" :density="fieldDensity" variant="outlined" />
             </v-col>
-            <v-col cols="6" sm="3">
+            <v-col cols="12" sm="3">
               <v-text-field
                 v-model="experience.end"
                 label="Fim"
@@ -426,10 +450,10 @@ const clearPhoto = () => {
             <v-col cols="12" sm="6">
               <v-text-field v-model="education.location" label="Local" :density="fieldDensity" variant="outlined" />
             </v-col>
-            <v-col cols="6" sm="3">
+            <v-col cols="12" sm="3">
               <v-text-field v-model="education.start" label="Início" type="month" :density="fieldDensity" variant="outlined" />
             </v-col>
-            <v-col cols="6" sm="3">
+            <v-col cols="12" sm="3">
               <v-text-field v-model="education.end" label="Fim" type="month" :density="fieldDensity" variant="outlined" />
             </v-col>
             <v-col cols="12">
@@ -657,17 +681,20 @@ const clearPhoto = () => {
             <v-col cols="12" sm="2">
               <v-text-field v-model="certification.year" label="Ano" :density="fieldDensity" variant="outlined" />
             </v-col>
+
+            <v-col>
+              <v-textarea
+                v-model="resume.interests"
+                label="Interesses (opcional)"
+                rows="2"
+                auto-grow
+                :density="fieldDensity"
+                variant="outlined"
+              />  
+            </v-col>
           </v-row>
         </v-sheet>
 
-        <v-textarea
-          v-model="resume.interests"
-          label="Interesses (opcional)"
-          rows="2"
-          auto-grow
-          :density="fieldDensity"
-          variant="outlined"
-        />
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>

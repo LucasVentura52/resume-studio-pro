@@ -27,9 +27,10 @@ const accentColor = ref('#0B4F6C')
 const openPanels = ref([0])
 const recordId = ref('')
 const notFound = ref(false)
-const baseline = ref('')
+const hasUnsavedChanges = ref(false)
 const savingFromQuickBar = ref(false)
 const previewingFromQuickBar = ref(false)
+let suspendDirtyTracking = false
 
 const editorData = reactive(createEmptyResumeData())
 
@@ -44,21 +45,18 @@ const replaceEditorData = (nextData) => {
   }
 }
 
-const buildSnapshot = () =>
-  JSON.stringify({
-    id: recordId.value,
-    title: resumeTitle.value.trim(),
-    template: selectedTemplate.value,
-    paper: selectedPaper.value,
-    accentColor: accentColor.value,
-    data: editorData,
-  })
-
-const updateBaseline = () => {
-  baseline.value = buildSnapshot()
+const runWithoutDirtyTracking = (callback) => {
+  suspendDirtyTracking = true
+  try {
+    callback()
+  } finally {
+    suspendDirtyTracking = false
+  }
 }
 
-const hasUnsavedChanges = computed(() => buildSnapshot() !== baseline.value)
+const markClean = () => {
+  hasUnsavedChanges.value = false
+}
 
 const currentTemplateTitle = computed(
   () => templateOptions.find((item) => item.value === selectedTemplate.value)?.title ?? 'Clássico',
@@ -74,14 +72,16 @@ const fieldDensity = computed(() => (display.smAndDown.value ? 'comfortable' : '
 const templateChipSize = computed(() => (display.smAndDown.value ? 'default' : 'small'))
 
 const applyEditorModel = (model) => {
-  recordId.value = model.id || ''
-  resumeTitle.value = model.title || ''
-  selectedTemplate.value = model.template || 'classic'
-  selectedPaper.value = model.paper || 'a4'
-  accentColor.value = model.accentColor || '#0B4F6C'
-  replaceEditorData(model.data)
-  openPanels.value = [0]
-  updateBaseline()
+  runWithoutDirtyTracking(() => {
+    recordId.value = model.id || ''
+    resumeTitle.value = model.title || ''
+    selectedTemplate.value = model.template || 'classic'
+    selectedPaper.value = model.paper || 'a4'
+    accentColor.value = model.accentColor || '#0B4F6C'
+    replaceEditorData(model.data)
+    openPanels.value = [0]
+  })
+  markClean()
 }
 
 const loadFromRoute = () => {
@@ -128,9 +128,11 @@ const saveEditor = async ({ silent = false } = {}) => {
     data: cloneResumeData(editorData),
   })
 
-  recordId.value = savedRecord.id
-  resumeTitle.value = savedRecord.title
-  updateBaseline()
+  runWithoutDirtyTracking(() => {
+    recordId.value = savedRecord.id
+    resumeTitle.value = savedRecord.title
+  })
+  markClean()
 
   if (ensureRouteId() !== savedRecord.id) {
     await router.replace({ name: 'resume-edit', params: { id: savedRecord.id } })
@@ -256,6 +258,18 @@ onBeforeRouteLeave(async () => {
     icon: 'mdi-alert-outline',
   })
 })
+
+watch(
+  [resumeTitle, selectedTemplate, selectedPaper, accentColor, editorData],
+  () => {
+    if (suspendDirtyTracking || hasUnsavedChanges.value) return
+    hasUnsavedChanges.value = true
+  },
+  {
+    deep: true,
+    flush: 'sync',
+  },
+)
 
 watch(
   () => route.params.id,

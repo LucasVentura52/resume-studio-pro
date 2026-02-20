@@ -10,11 +10,13 @@ const manager = useResumeManager()
 const feedback = useUiFeedback()
 
 const recordsForList = computed(() =>
-  manager.records.value.map((record) => {
-    const role = record.data.personal.role?.trim() || 'Sem cargo definido'
+  manager.records.value.map(({ id, title, updatedAt, data }) => {
+    const role = data?.personal?.role?.trim() || 'Sem cargo definido'
     return {
-      ...record,
-      subtitle: `${role} - Atualizado em ${manager.formatRecordDateTime(record.updatedAt)}`,
+      id,
+      title,
+      updatedAt,
+      subtitle: `${role} - Atualizado em ${manager.formatRecordDateTime(updatedAt)}`,
     }
   }),
 )
