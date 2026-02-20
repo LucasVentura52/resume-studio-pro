@@ -22,11 +22,11 @@ const props = defineProps({
   },
   levelOptions: {
     type: Array,
-    default: () => ['Basico', 'Intermediario', 'Avancado', 'Especialista'],
+    default: () => ['Básico', 'Intermediário', 'Avançado', 'Especialista'],
   },
   languageLevelOptions: {
     type: Array,
-    default: () => ['Basico', 'Intermediario', 'Avancado', 'Fluente', 'Nativo'],
+    default: () => ['Básico', 'Intermediário', 'Avançado', 'Fluente', 'Nativo'],
   },
 })
 
@@ -108,13 +108,13 @@ const sectionShortcuts = computed(() => [
   },
   {
     index: 2,
-    title: 'Experiencia',
+    title: 'Experiência',
     icon: 'mdi-briefcase-outline',
     done: experiencesForPreview.value.length > 0,
   },
   {
     index: 3,
-    title: 'Formacao',
+    title: 'Formação',
     icon: 'mdi-school-outline',
     done: educationForPreview.value.length > 0,
   },
@@ -171,7 +171,7 @@ const handlePhotoUpload = async (payload) => {
 
   if (!file.type.startsWith('image/')) {
     feedback.warning({
-      title: 'Formato invalido',
+      title: 'Formato inválido',
       message: 'Selecione uma imagem PNG, JPG ou WEBP para a foto.',
     })
     return
@@ -183,7 +183,7 @@ const handlePhotoUpload = async (payload) => {
     console.error(error)
     feedback.error({
       title: 'Falha ao carregar foto',
-      message: 'Nao foi possivel ler a imagem selecionada. Tente outro arquivo.',
+      message: 'Não foi possível ler a imagem selecionada. Tente outro arquivo.',
     })
   }
 }
@@ -193,7 +193,7 @@ const clearPhoto = () => {
   props.resume.personal.photoUrl = ''
   feedback.info({
     title: 'Foto removida',
-    message: 'A foto do curriculo foi removida.',
+    message: 'A foto do currículo foi removida.',
   })
 }
 </script>
@@ -215,7 +215,7 @@ const clearPhoto = () => {
         :variant="section.done ? 'flat' : 'outlined'"
         size="small"
         class="nav-chip"
-        :aria-label="`Ir para secao ${section.title}`"
+        :aria-label="`Ir para seção ${section.title}`"
         @click="goToSection(section.index)"
       >
         <v-icon start size="14" :icon="section.done ? 'mdi-check-circle' : section.icon" />
@@ -241,7 +241,7 @@ const clearPhoto = () => {
             <v-text-field v-model="resume.personal.phone" label="Telefone" :density="fieldDensity" variant="outlined" />
           </v-col>
           <v-col cols="12">
-            <v-text-field v-model="resume.personal.location" label="Localizacao" :density="fieldDensity" variant="outlined" />
+            <v-text-field v-model="resume.personal.location" label="Localização" :density="fieldDensity" variant="outlined" />
           </v-col>
           <v-col cols="12" sm="6">
             <v-text-field v-model="resume.personal.website" label="Site/Portfolio" :density="fieldDensity" variant="outlined" />
@@ -249,13 +249,13 @@ const clearPhoto = () => {
           <v-col cols="12" sm="6">
             <v-text-field
               v-model="resume.personal.linkedin"
-              label="LinkedIn (url ou usuario)"
+              label="LinkedIn (URL ou usuário)"
               :density="fieldDensity"
               variant="outlined"
             />
           </v-col>
           <v-col cols="12" sm="6">
-            <v-text-field v-model="resume.personal.github" label="GitHub (url ou usuario)" :density="fieldDensity" variant="outlined" />
+            <v-text-field v-model="resume.personal.github" label="GitHub (URL ou usuário)" :density="fieldDensity" variant="outlined" />
           </v-col>
           <v-col cols="12" sm="6">
             <v-file-input
@@ -272,7 +272,7 @@ const clearPhoto = () => {
           <v-col cols="12" sm="6">
             <v-text-field
               v-model="resume.personal.photoUrl"
-              label="ou URL da foto (opcional)"
+              label="Ou URL da foto (opcional)"
               :density="fieldDensity"
               variant="outlined"
             />
@@ -312,7 +312,7 @@ const clearPhoto = () => {
     <v-expansion-panel title="Experiencia profissional">
       <v-expansion-panel-text>
         <div class="d-flex justify-space-between align-center mb-3">
-          <p class="text-subtitle-2 font-weight-medium">Historico profissional</p>
+          <p class="text-subtitle-2 font-weight-medium">Histórico profissional</p>
           <v-btn
             size="small"
             color="primary"
@@ -326,8 +326,8 @@ const clearPhoto = () => {
 
         <v-sheet v-for="(experience, index) in resume.experiences" :key="experience.id" class="entry-form mb-3 pa-3" rounded="lg">
           <div class="d-flex justify-space-between align-center mb-2">
-            <p class="text-caption text-medium-emphasis">Experiencia {{ index + 1 }}</p>
-            <v-tooltip text="Remover experiencia" location="top">
+            <p class="text-caption text-medium-emphasis">Experiência {{ index + 1 }}</p>
+            <v-tooltip text="Remover experiência" location="top">
               <template #activator="{ props: tooltipProps }">
                 <v-btn
                   v-bind="tooltipProps"
@@ -335,7 +335,7 @@ const clearPhoto = () => {
                   size="small"
                   color="error"
                   variant="text"
-                  :aria-label="`Remover experiencia ${index + 1}`"
+                  :aria-label="`Remover experiência ${index + 1}`"
                   :disabled="resume.experiences.length === 1"
                   @click="removeItem(resume.experiences, index)"
                 />
@@ -353,7 +353,7 @@ const clearPhoto = () => {
               <v-text-field v-model="experience.location" label="Local" :density="fieldDensity" variant="outlined" />
             </v-col>
             <v-col cols="6" sm="3">
-              <v-text-field v-model="experience.start" label="Inicio" type="month" :density="fieldDensity" variant="outlined" />
+              <v-text-field v-model="experience.start" label="Início" type="month" :density="fieldDensity" variant="outlined" />
             </v-col>
             <v-col cols="6" sm="3">
               <v-text-field
@@ -383,10 +383,10 @@ const clearPhoto = () => {
       </v-expansion-panel-text>
     </v-expansion-panel>
 
-    <v-expansion-panel title="Formacao academica">
+    <v-expansion-panel title="Formação acadêmica">
       <v-expansion-panel-text>
         <div class="d-flex justify-space-between align-center mb-3">
-          <p class="text-subtitle-2 font-weight-medium">Formacao</p>
+          <p class="text-subtitle-2 font-weight-medium">Formação</p>
           <v-btn
             size="small"
             color="primary"
@@ -400,8 +400,8 @@ const clearPhoto = () => {
 
         <v-sheet v-for="(education, index) in resume.education" :key="education.id" class="entry-form mb-3 pa-3" rounded="lg">
           <div class="d-flex justify-space-between align-center mb-2">
-            <p class="text-caption text-medium-emphasis">Formacao {{ index + 1 }}</p>
-            <v-tooltip text="Remover formacao" location="top">
+            <p class="text-caption text-medium-emphasis">Formação {{ index + 1 }}</p>
+            <v-tooltip text="Remover formação" location="top">
               <template #activator="{ props: tooltipProps }">
                 <v-btn
                   v-bind="tooltipProps"
@@ -409,7 +409,7 @@ const clearPhoto = () => {
                   size="small"
                   color="error"
                   variant="text"
-                  :aria-label="`Remover formacao ${index + 1}`"
+                  :aria-label="`Remover formação ${index + 1}`"
                   :disabled="resume.education.length === 1"
                   @click="removeItem(resume.education, index)"
                 />
@@ -418,16 +418,16 @@ const clearPhoto = () => {
           </div>
           <v-row>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="education.degree" label="Curso/Titulo" :density="fieldDensity" variant="outlined" />
+              <v-text-field v-model="education.degree" label="Curso/Título" :density="fieldDensity" variant="outlined" />
             </v-col>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="education.institution" label="Instituicao" :density="fieldDensity" variant="outlined" />
+              <v-text-field v-model="education.institution" label="Instituição" :density="fieldDensity" variant="outlined" />
             </v-col>
             <v-col cols="12" sm="6">
               <v-text-field v-model="education.location" label="Local" :density="fieldDensity" variant="outlined" />
             </v-col>
             <v-col cols="6" sm="3">
-              <v-text-field v-model="education.start" label="Inicio" type="month" :density="fieldDensity" variant="outlined" />
+              <v-text-field v-model="education.start" label="Início" type="month" :density="fieldDensity" variant="outlined" />
             </v-col>
             <v-col cols="6" sm="3">
               <v-text-field v-model="education.end" label="Fim" type="month" :density="fieldDensity" variant="outlined" />
@@ -435,7 +435,7 @@ const clearPhoto = () => {
             <v-col cols="12">
               <v-textarea
                 v-model="education.notes"
-                label="Observacoes relevantes"
+                label="Observações relevantes"
                 rows="2"
                 auto-grow
                 :density="fieldDensity"
@@ -493,7 +493,7 @@ const clearPhoto = () => {
             <v-col cols="12">
               <v-textarea
                 v-model="project.description"
-                label="Descricao e impacto"
+                label="Descrição e impacto"
                 rows="2"
                 auto-grow
                 :density="fieldDensity"
@@ -508,7 +508,7 @@ const clearPhoto = () => {
     <v-expansion-panel title="Skills e idiomas">
       <v-expansion-panel-text>
         <div class="d-flex justify-space-between align-center mb-2">
-          <p class="text-subtitle-2 font-weight-medium">Competencias</p>
+          <p class="text-subtitle-2 font-weight-medium">Competências</p>
           <v-btn
             size="small"
             color="primary"
@@ -524,7 +524,7 @@ const clearPhoto = () => {
             <div class="d-flex flex-wrap ga-2 align-center">
               <v-text-field
                 v-model="skill.name"
-                label="Competencia"
+                label="Competência"
                 hide-details
                 :density="fieldDensity"
                 variant="outlined"
@@ -533,13 +533,13 @@ const clearPhoto = () => {
               <v-select
                 v-model="skill.level"
                 :items="levelOptions"
-                label="Nivel"
+                label="Nível"
                 hide-details
                 :density="fieldDensity"
                 variant="outlined"
                 class="level-select"
               />
-              <v-tooltip text="Remover competencia" location="top">
+              <v-tooltip text="Remover competência" location="top">
                 <template #activator="{ props: tooltipProps }">
                   <v-btn
                     v-bind="tooltipProps"
@@ -547,7 +547,7 @@ const clearPhoto = () => {
                     size="small"
                     color="error"
                     variant="text"
-                    :aria-label="`Remover competencia ${index + 1}`"
+                    :aria-label="`Remover competência ${index + 1}`"
                     :disabled="resume.skills.length === 1"
                     @click="removeItem(resume.skills, index)"
                   />
@@ -583,13 +583,13 @@ const clearPhoto = () => {
               <v-select
                 v-model="language.level"
                 :items="languageLevelOptions"
-                label="Nivel"
+                label="Nível"
                 hide-details
                 :density="fieldDensity"
                 variant="outlined"
                 class="level-select"
               />
-              <v-tooltip text="Remover idioma" location="top">
+            <v-tooltip text="Remover idioma" location="top">
                 <template #activator="{ props: tooltipProps }">
                   <v-btn
                     v-bind="tooltipProps"
@@ -609,10 +609,10 @@ const clearPhoto = () => {
       </v-expansion-panel-text>
     </v-expansion-panel>
 
-    <v-expansion-panel title="Certificacoes e interesses">
+    <v-expansion-panel title="Certificações e interesses">
       <v-expansion-panel-text>
         <div class="d-flex justify-space-between align-center mb-3">
-          <p class="text-subtitle-2 font-weight-medium">Certificacoes</p>
+          <p class="text-subtitle-2 font-weight-medium">Certificações</p>
           <v-btn
             size="small"
             color="primary"
@@ -631,8 +631,8 @@ const clearPhoto = () => {
           rounded="lg"
         >
           <div class="d-flex justify-space-between align-center mb-2">
-            <p class="text-caption text-medium-emphasis">Certificacao {{ index + 1 }}</p>
-            <v-tooltip text="Remover certificacao" location="top">
+            <p class="text-caption text-medium-emphasis">Certificação {{ index + 1 }}</p>
+            <v-tooltip text="Remover certificação" location="top">
               <template #activator="{ props: tooltipProps }">
                 <v-btn
                   v-bind="tooltipProps"
@@ -640,7 +640,7 @@ const clearPhoto = () => {
                   size="small"
                   color="error"
                   variant="text"
-                  :aria-label="`Remover certificacao ${index + 1}`"
+                  :aria-label="`Remover certificação ${index + 1}`"
                   :disabled="resume.certifications.length === 1"
                   @click="removeItem(resume.certifications, index)"
                 />
@@ -652,7 +652,7 @@ const clearPhoto = () => {
               <v-text-field v-model="certification.name" label="Nome" :density="fieldDensity" variant="outlined" />
             </v-col>
             <v-col cols="12" sm="5">
-              <v-text-field v-model="certification.issuer" label="Instituicao" :density="fieldDensity" variant="outlined" />
+              <v-text-field v-model="certification.issuer" label="Instituição" :density="fieldDensity" variant="outlined" />
             </v-col>
             <v-col cols="12" sm="2">
               <v-text-field v-model="certification.year" label="Ano" :density="fieldDensity" variant="outlined" />

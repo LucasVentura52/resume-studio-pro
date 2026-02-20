@@ -39,8 +39,8 @@ const deleteRecord = async (recordId) => {
   if (!target) return
 
   const confirmed = await feedback.confirm({
-    title: 'Excluir curriculo',
-    message: `Excluir "${target.title}"? Esta acao nao pode ser desfeita.`,
+    title: 'Excluir currículo',
+    message: `Excluir "${target.title}"? Esta ação não pode ser desfeita.`,
     confirmText: 'Excluir',
     cancelText: 'Cancelar',
     color: 'error',
@@ -52,7 +52,7 @@ const deleteRecord = async (recordId) => {
 
   if (removed) {
     feedback.success({
-      title: 'Curriculo excluido',
+      title: 'Currículo excluído',
       message: `"${target.title}" foi removido com sucesso.`,
     })
     return
@@ -60,7 +60,7 @@ const deleteRecord = async (recordId) => {
 
   feedback.error({
     title: 'Falha ao excluir',
-    message: 'Nao foi possivel remover o curriculo selecionado.',
+    message: 'Não foi possível remover o currículo selecionado.',
   })
 }
 
@@ -68,15 +68,15 @@ const duplicateRecord = (recordId) => {
   const duplicated = manager.duplicateRecord(recordId)
   if (!duplicated) {
     feedback.error({
-      title: 'Falha na duplicacao',
-      message: 'Nao foi possivel duplicar o curriculo selecionado.',
+      title: 'Falha na duplicação',
+      message: 'Não foi possível duplicar o currículo selecionado.',
     })
     return
   }
 
   feedback.success({
-    title: 'Curriculo duplicado',
-    message: `Nova copia criada: "${duplicated.title}".`,
+    title: 'Currículo duplicado',
+    message: `Nova cópia criada: "${duplicated.title}".`,
   })
 
   router.push({ name: 'resume-edit', params: { id: duplicated.id } })
@@ -91,13 +91,13 @@ const duplicateRecord = (recordId) => {
           <div class="d-flex justify-space-between align-center flex-wrap ga-3">
             <div>
               <p class="text-overline text-white font-weight-bold mb-1">Resume Studio Pro</p>
-              <h1 class="text-h5 font-weight-bold mb-1">Gestao profissional de curriculos</h1>
+              <h1 class="text-h5 font-weight-bold mb-1">Gestão profissional de currículos</h1>
               <p class="text-body-2 text-white-80">
-                Centralize versoes, edite com estrutura completa e exporte PDF final sem depender da impressao do navegador.
+                Centralize versões, edite com estrutura completa e exporte PDF final sem depender da impressão do navegador.
               </p>
             </div>
             <v-btn color="white" class="text-primary font-weight-bold" prepend-icon="mdi-plus" @click="goToCreate">
-              Novo curriculo
+              Novo currículo
             </v-btn>
           </div>
         </v-card>
@@ -105,7 +105,7 @@ const duplicateRecord = (recordId) => {
 
       <v-col cols="12" md="4">
         <v-card rounded="xl" class="glass-card stat-card">
-          <p class="text-caption text-medium-emphasis mb-1">Curriculos salvos</p>
+          <p class="text-caption text-medium-emphasis mb-1">Currículos salvos</p>
           <p class="text-h4 font-weight-bold mb-1">{{ totalRecords }}</p>
           <p class="text-caption text-medium-emphasis">Organizados no localStorage do navegador.</p>
         </v-card>
@@ -113,12 +113,12 @@ const duplicateRecord = (recordId) => {
 
       <v-col cols="12" md="8">
         <v-card rounded="xl" class="glass-card stat-card">
-          <p class="text-caption text-medium-emphasis mb-1">Ultima atualizacao</p>
+          <p class="text-caption text-medium-emphasis mb-1">Última atualização</p>
           <p class="text-h6 font-weight-bold mb-1">
-            {{ latestRecord ? latestRecord.title : 'Nenhum curriculo salvo' }}
+            {{ latestRecord ? latestRecord.title : 'Nenhum currículo salvo' }}
           </p>
           <p class="text-caption text-medium-emphasis">
-            {{ latestRecord ? manager.formatRecordDateTime(latestRecord.updatedAt) : 'Crie um curriculo para iniciar.' }}
+            {{ latestRecord ? manager.formatRecordDateTime(latestRecord.updatedAt) : 'Crie um currículo para iniciar.' }}
           </p>
         </v-card>
       </v-col>

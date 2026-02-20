@@ -61,14 +61,14 @@ const updateBaseline = () => {
 const hasUnsavedChanges = computed(() => buildSnapshot() !== baseline.value)
 
 const currentTemplateTitle = computed(
-  () => templateOptions.find((item) => item.value === selectedTemplate.value)?.title ?? 'Classico',
+  () => templateOptions.find((item) => item.value === selectedTemplate.value)?.title ?? 'Clássico',
 )
 
 const currentPaperTitle = computed(
   () => paperOptions.find((item) => item.value === selectedPaper.value)?.title ?? 'A4',
 )
 
-const editorModeLabel = computed(() => (recordId.value ? 'Editando curriculo salvo' : 'Novo curriculo'))
+const editorModeLabel = computed(() => (recordId.value ? 'Editando currículo salvo' : 'Novo currículo'))
 const isMobile = computed(() => display.mdAndDown.value)
 const fieldDensity = computed(() => (display.smAndDown.value ? 'comfortable' : 'compact'))
 const templateChipSize = computed(() => (display.smAndDown.value ? 'default' : 'small'))
@@ -108,8 +108,8 @@ const loadFromRoute = () => {
 const confirmDiscardChanges = async () => {
   if (!hasUnsavedChanges.value) return true
   return feedback.confirm({
-    title: 'Alteracoes nao salvas',
-    message: 'Existem alteracoes nao salvas. Deseja descartar e continuar?',
+    title: 'Alterações não salvas',
+    message: 'Existem alterações não salvas. Deseja descartar e continuar?',
     confirmText: 'Descartar',
     cancelText: 'Continuar editando',
     color: 'warning',
@@ -138,7 +138,7 @@ const saveEditor = async ({ silent = false } = {}) => {
 
   if (!silent) {
     feedback.success({
-      title: isEditing ? 'Curriculo atualizado' : 'Curriculo salvo',
+      title: isEditing ? 'Currículo atualizado' : 'Currículo salvo',
       message: `"${savedRecord.title}" foi salvo no navegador.`,
     })
   }
@@ -149,7 +149,7 @@ const saveEditor = async ({ silent = false } = {}) => {
 const saveAndPreview = async () => {
   const savedRecord = await saveEditor({ silent: true })
   feedback.info({
-    title: 'Abrindo preview',
+    title: 'Abrindo pré-visualização',
     message: `Visualizando "${savedRecord.title}" em tela dedicada.`,
   })
   router.push({ name: 'resume-preview', params: { id: savedRecord.id } })
@@ -194,7 +194,7 @@ const clearEditor = async () => {
   applyEditorModel(manager.createEditorModel())
   feedback.info({
     title: 'Editor limpo',
-    message: 'Todos os campos foram redefinidos para um novo curriculo.',
+    message: 'Todos os campos foram redefinidos para um novo currículo.',
   })
 }
 
@@ -219,15 +219,15 @@ const reloadFromSavedRecord = async () => {
   const source = manager.getRecordById(recordId.value)
   if (!source) {
     feedback.error({
-      title: 'Registro indisponivel',
-      message: 'Nao foi possivel recarregar porque o curriculo nao existe mais.',
+      title: 'Registro indisponível',
+      message: 'Não foi possível recarregar porque o currículo não existe mais.',
     })
     return
   }
 
   const confirmed = await feedback.confirm({
-    title: 'Recarregar versao salva',
-    message: 'Recarregar a versao salva e descartar alteracoes atuais?',
+    title: 'Recarregar versão salva',
+    message: 'Recarregar a versão salva e descartar alterações atuais?',
     confirmText: 'Recarregar',
     cancelText: 'Cancelar',
     color: 'warning',
@@ -238,7 +238,7 @@ const reloadFromSavedRecord = async () => {
   applyEditorModel(manager.createEditorModel(recordId.value))
   feedback.info({
     title: 'Dados restaurados',
-    message: 'O editor foi atualizado com a ultima versao salva.',
+    message: 'O editor foi atualizado com a última versão salva.',
   })
 }
 
@@ -249,7 +249,7 @@ onBeforeRouteLeave(async () => {
 
   return feedback.confirm({
     title: 'Sair sem salvar',
-    message: 'Existem alteracoes nao salvas. Deseja sair mesmo assim?',
+    message: 'Existem alterações não salvas. Deseja sair mesmo assim?',
     confirmText: 'Sair sem salvar',
     cancelText: 'Continuar editando',
     color: 'warning',
@@ -273,9 +273,9 @@ watch(
         <div class="page-heading d-flex justify-space-between align-start flex-wrap ga-3">
           <div>
             <p class="text-overline text-primary font-weight-bold mb-1">Editor profissional</p>
-            <h1 class="text-h5 font-weight-bold mb-1">Montagem detalhada de curriculo</h1>
+            <h1 class="text-h5 font-weight-bold mb-1">Montagem detalhada de currículo</h1>
             <p class="text-body-2 text-medium-emphasis">
-              Preencha os dados em secoes e salve para abrir a visualizacao final em uma tela dedicada.
+              Preencha os dados em seções e salve para abrir a visualização final em uma tela dedicada.
             </p>
           </div>
           <div class="d-flex flex-wrap ga-2 align-center">
@@ -287,7 +287,7 @@ watch(
 
       <v-col v-if="notFound" cols="12">
         <v-alert type="warning" variant="tonal" class="mb-4">
-          O curriculo solicitado nao foi encontrado. Inicie um novo ou volte para a lista.
+          O currículo solicitado não foi encontrado. Inicie um novo ou volte para a lista.
         </v-alert>
         <v-btn color="primary" prepend-icon="mdi-arrow-left" @click="router.push({ name: 'resumes-dashboard' })">
           Voltar para lista
@@ -299,8 +299,8 @@ watch(
           <v-card rounded="xl" class="glass-card editor-main-card">
             <div class="pa-4 pb-2 d-flex align-center justify-space-between flex-wrap ga-2">
               <div>
-                <p class="text-subtitle-1 font-weight-bold mb-1">Conteudo do curriculo</p>
-                <p class="text-caption text-medium-emphasis">Dados pessoais, experiencia, formacao e secoes extras.</p>
+                <p class="text-subtitle-1 font-weight-bold mb-1">Conteúdo do currículo</p>
+                <p class="text-caption text-medium-emphasis">Dados pessoais, experiência, formação e seções extras.</p>
               </div>
             </div>
             <v-divider />
@@ -318,11 +318,11 @@ watch(
         <v-col cols="12" lg="4">
           <v-card rounded="xl" class="glass-card sticky-side mobile-settings-card">
             <div class="pa-4">
-              <p class="text-subtitle-1 font-weight-bold mb-2">Configuracoes e acao</p>
+              <p class="text-subtitle-1 font-weight-bold mb-2">Configurações e ação</p>
 
               <v-text-field
                 v-model="resumeTitle"
-                label="Nome interno do curriculo"
+                label="Nome interno do currículo"
                 :density="fieldDensity"
                 variant="outlined"
                 class="mb-2"
@@ -369,11 +369,11 @@ watch(
               </v-row>
 
               <v-alert v-if="hasUnsavedChanges" type="warning" :density="fieldDensity" variant="tonal" class="mb-3">
-                Existem alteracoes nao salvas.
+                Existem alterações não salvas.
               </v-alert>
 
               <div class="d-flex flex-column ga-2">
-                <v-btn color="primary" prepend-icon="mdi-content-save-outline" @click="saveEditor">Salvar curriculo</v-btn>
+                <v-btn color="primary" prepend-icon="mdi-content-save-outline" @click="saveEditor">Salvar currículo</v-btn>
                 <v-btn color="secondary" variant="flat" prepend-icon="mdi-eye-outline" @click="saveAndPreview">
                   Salvar e visualizar
                 </v-btn>
@@ -384,7 +384,7 @@ watch(
                   prepend-icon="mdi-refresh"
                   @click="reloadFromSavedRecord"
                 >
-                  Recarregar salvo
+                  Recarregar versão salva
                 </v-btn>
                 <v-btn color="secondary" variant="text" prepend-icon="mdi-lightning-bolt" @click="loadSampleData">
                   Carregar exemplo
@@ -406,7 +406,7 @@ watch(
       v-if="!notFound && isMobile"
       class="mobile-quick-actions no-print"
       role="region"
-      aria-label="Acoes rapidas do editor"
+      aria-label="Ações rápidas do editor"
     >
       <v-btn
         color="primary"

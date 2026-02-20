@@ -18,10 +18,10 @@ const useCompactActions = computed(() => display.smAndDown.value)
   <v-card rounded="xl" class="glass-card">
     <div class="d-flex align-center justify-space-between flex-wrap ga-2 pa-4 pb-2">
       <div>
-        <p class="text-subtitle-1 font-weight-bold mb-1">Curriculos salvos</p>
-        <p class="text-caption text-medium-emphasis">Visualize, edite, duplique ou exclua cada versao.</p>
+        <p class="text-subtitle-1 font-weight-bold mb-1">Currículos salvos</p>
+        <p class="text-caption text-medium-emphasis">Visualize, edite, duplique ou exclua cada versão.</p>
       </div>
-      <v-btn color="primary" prepend-icon="mdi-plus" @click="emit('create')">Novo curriculo</v-btn>
+      <v-btn color="primary" prepend-icon="mdi-plus" @click="emit('create')">Novo currículo</v-btn>
     </div>
 
     <v-divider />
@@ -33,7 +33,7 @@ const useCompactActions = computed(() => display.smAndDown.value)
         class="resume-list-item"
         role="button"
         tabindex="0"
-        :aria-label="`Editar curriculo ${record.title}`"
+        :aria-label="`Editar currículo ${record.title}`"
         @click="emit('edit', record.id)"
         @keydown.enter.prevent="emit('edit', record.id)"
         @keydown.space.prevent="emit('edit', record.id)"
@@ -55,7 +55,7 @@ const useCompactActions = computed(() => display.smAndDown.value)
                 icon="mdi-dots-vertical"
                 size="default"
                 variant="text"
-                :aria-label="`Acoes para ${record.title}`"
+                :aria-label="`Ações para ${record.title}`"
                 @click.stop
               />
             </template>
@@ -69,7 +69,7 @@ const useCompactActions = computed(() => display.smAndDown.value)
           </v-menu>
 
           <div v-else class="d-flex ga-1">
-            <v-tooltip text="Visualizar curriculo" location="top">
+            <v-tooltip text="Visualizar currículo" location="top">
               <template #activator="{ props: tooltipProps }">
                 <v-btn
                   v-bind="tooltipProps"
@@ -82,7 +82,7 @@ const useCompactActions = computed(() => display.smAndDown.value)
               </template>
             </v-tooltip>
 
-            <v-tooltip text="Editar curriculo" location="top">
+            <v-tooltip text="Editar currículo" location="top">
               <template #activator="{ props: tooltipProps }">
                 <v-btn
                   v-bind="tooltipProps"
@@ -95,7 +95,7 @@ const useCompactActions = computed(() => display.smAndDown.value)
               </template>
             </v-tooltip>
 
-            <v-tooltip text="Duplicar curriculo" location="top">
+            <v-tooltip text="Duplicar currículo" location="top">
               <template #activator="{ props: tooltipProps }">
                 <v-btn
                   v-bind="tooltipProps"
@@ -108,7 +108,7 @@ const useCompactActions = computed(() => display.smAndDown.value)
               </template>
             </v-tooltip>
 
-            <v-tooltip text="Excluir curriculo" location="top">
+            <v-tooltip text="Excluir currículo" location="top">
               <template #activator="{ props: tooltipProps }">
                 <v-btn
                   v-bind="tooltipProps"
@@ -131,8 +131,8 @@ const useCompactActions = computed(() => display.smAndDown.value)
             <v-icon icon="mdi-folder-outline" size="18" />
           </v-avatar>
         </template>
-        <v-list-item-title>Nenhum curriculo salvo</v-list-item-title>
-        <v-list-item-subtitle>Clique em "Novo curriculo" para iniciar o primeiro registro.</v-list-item-subtitle>
+        <v-list-item-title>Nenhum currículo salvo</v-list-item-title>
+        <v-list-item-subtitle>Clique em "Novo currículo" para iniciar o primeiro registro.</v-list-item-subtitle>
       </v-list-item>
     </v-list>
   </v-card>

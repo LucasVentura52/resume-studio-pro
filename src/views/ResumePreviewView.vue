@@ -39,9 +39,9 @@ const templateLabel = computed(() => {
 })
 
 const fitStatus = computed(() => {
-  if (!record.value) return { color: 'default', label: 'Sem curriculo selecionado' }
-  if (fitting.value) return { color: 'info', label: 'Ajustando para 1 pagina...' }
-  if (overflowPx.value <= OVERFLOW_TOLERANCE_PX) return { color: 'success', label: '1 pagina: OK' }
+  if (!record.value) return { color: 'default', label: 'Sem currículo selecionado' }
+  if (fitting.value) return { color: 'info', label: 'Ajustando para 1 página...' }
+  if (overflowPx.value <= OVERFLOW_TOLERANCE_PX) return { color: 'success', label: '1 página: OK' }
   return { color: 'warning', label: `Ainda excede ${Math.round(overflowPx.value)}px` }
 })
 const isMobile = computed(() => display.mdAndDown.value)
@@ -112,8 +112,8 @@ const deleteCurrentRecord = async () => {
   if (!record.value) return
 
   const confirmed = await feedback.confirm({
-    title: 'Excluir curriculo',
-    message: `Excluir "${record.value.title}"? Esta acao nao pode ser desfeita.`,
+    title: 'Excluir currículo',
+    message: `Excluir "${record.value.title}"? Esta ação não pode ser desfeita.`,
     confirmText: 'Excluir',
     cancelText: 'Cancelar',
     color: 'error',
@@ -125,13 +125,13 @@ const deleteCurrentRecord = async () => {
   if (!removed) {
     feedback.error({
       title: 'Falha ao excluir',
-      message: 'Nao foi possivel remover o curriculo selecionado.',
+      message: 'Não foi possível remover o currículo selecionado.',
     })
     return
   }
 
   feedback.success({
-    title: 'Curriculo excluido',
+    title: 'Currículo excluído',
     message: 'O registro foi removido com sucesso.',
   })
 
@@ -143,15 +143,15 @@ const duplicateCurrentRecord = () => {
   const duplicated = manager.duplicateRecord(record.value.id)
   if (!duplicated) {
     feedback.error({
-      title: 'Falha na duplicacao',
-      message: 'Nao foi possivel duplicar o curriculo selecionado.',
+      title: 'Falha na duplicação',
+      message: 'Não foi possível duplicar o currículo selecionado.',
     })
     return
   }
 
   feedback.success({
-    title: 'Curriculo duplicado',
-    message: `"${duplicated.title}" foi criado e aberto para edicao.`,
+    title: 'Currículo duplicado',
+    message: `"${duplicated.title}" foi criado e aberto para edição.`,
   })
   router.push({ name: 'resume-edit', params: { id: duplicated.id } })
 }
@@ -167,6 +167,7 @@ const downloadPdf = async () => {
       element: sheetElement,
       title: record.value.title,
       paper: record.value.paper,
+      fitToSinglePage: onePageMode.value,
     })
     feedback.success({
       title: 'PDF gerado',
@@ -176,7 +177,7 @@ const downloadPdf = async () => {
     console.error(error)
     feedback.error({
       title: 'Erro ao gerar PDF',
-      message: 'Nao foi possivel gerar o PDF. Revise o curriculo e tente novamente.',
+      message: 'Não foi possível gerar o PDF. Revise o currículo e tente novamente.',
     })
   } finally {
     exportingPdf.value = false
@@ -215,8 +216,8 @@ onBeforeUnmount(() => {
         <div class="page-heading d-flex justify-space-between align-start flex-wrap ga-3">
           <div>
             <p class="text-overline text-primary font-weight-bold mb-1">Preview dedicado</p>
-            <h1 class="text-h5 font-weight-bold mb-1">Visualizacao final do curriculo</h1>
-            <p class="text-body-2 text-medium-emphasis">Revise a versao selecionada e gere PDF real com um clique.</p>
+            <h1 class="text-h5 font-weight-bold mb-1">Visualização final do currículo</h1>
+            <p class="text-body-2 text-medium-emphasis">Revise a versão selecionada e gere PDF real com um clique.</p>
           </div>
           <div class="d-flex flex-wrap ga-2">
             <v-btn variant="text" prepend-icon="mdi-arrow-left" @click="router.push({ name: 'resumes-dashboard' })">
@@ -246,9 +247,9 @@ onBeforeUnmount(() => {
 
       <v-col v-if="!record" cols="12">
         <v-card rounded="xl" class="glass-card pa-6">
-          <p class="text-subtitle-1 font-weight-bold mb-2">Curriculo nao encontrado</p>
+          <p class="text-subtitle-1 font-weight-bold mb-2">Currículo não encontrado</p>
           <p class="text-body-2 text-medium-emphasis mb-4">
-            O registro pode ter sido removido. Volte para a lista e escolha outro curriculo.
+            O registro pode ter sido removido. Volte para a lista e escolha outro currículo.
           </p>
           <v-btn color="primary" prepend-icon="mdi-arrow-left" @click="router.push({ name: 'resumes-dashboard' })">
             Ir para lista
@@ -288,7 +289,7 @@ onBeforeUnmount(() => {
               :density="controlDensity"
               inset
               class="mb-2"
-              label="Modo 1 pagina automatico"
+              label="Modo 1 página automático"
             />
 
             <v-chip :color="fitStatus.color" variant="tonal" class="mb-2" role="status" aria-live="polite">
@@ -296,7 +297,7 @@ onBeforeUnmount(() => {
             </v-chip>
 
             <p class="text-caption text-medium-emphasis mb-4">
-              Nivel de compactacao aplicado: {{ fitLevel }}/{{ MAX_FIT_LEVEL }}
+              Nível de compactação aplicado: {{ fitLevel }}/{{ MAX_FIT_LEVEL }}
             </p>
 
             <div class="d-flex flex-column ga-2">
@@ -316,7 +317,7 @@ onBeforeUnmount(() => {
       v-if="record && isMobile"
       class="mobile-quick-actions no-print"
       role="region"
-      aria-label="Acoes rapidas da visualizacao"
+      aria-label="Ações rápidas da visualização"
     >
       <v-btn
         color="primary"

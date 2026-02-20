@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap');
-
 :root {
   --bg-1: #ebf1f7;
   --bg-2: #dfe8f3;
@@ -306,6 +304,8 @@ a {
   box-shadow: 0 20px 42px rgba(22, 38, 62, 0.22);
   border-radius: 20px;
   overflow: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .resume-sheet.paper-a4 {
@@ -1539,63 +1539,63 @@ a {
     padding-bottom: 6px;
   }
 
-  .resume-header {
+  .resume-sheet:not(.pdf-export) .resume-header {
     padding: 20px 18px 12px;
   }
 
-  .quick-contacts {
+  .resume-sheet:not(.pdf-export) .quick-contacts {
     padding: 10px 18px;
     gap: 8px 10px;
   }
 
-  .resume-body,
-  .layout-sidebar .resume-body,
-  .layout-creative .resume-body,
-  .layout-professional-executive .resume-body,
-  .layout-professional-corporate .resume-body,
-  .layout-classic-formal .resume-body,
-  .layout-modern-grid .resume-body {
+  .resume-sheet:not(.pdf-export) .resume-body,
+  .resume-sheet:not(.pdf-export).layout-sidebar .resume-body,
+  .resume-sheet:not(.pdf-export).layout-creative .resume-body,
+  .resume-sheet:not(.pdf-export).layout-professional-executive .resume-body,
+  .resume-sheet:not(.pdf-export).layout-professional-corporate .resume-body,
+  .resume-sheet:not(.pdf-export).layout-classic-formal .resume-body,
+  .resume-sheet:not(.pdf-export).layout-modern-grid .resume-body {
     grid-template-columns: 1fr;
   }
 
-  .resume-aside,
-  .resume-main {
+  .resume-sheet:not(.pdf-export) .resume-aside,
+  .resume-sheet:not(.pdf-export) .resume-main {
     padding: 16px 18px;
   }
 
-  .layout-minimal .resume-aside {
-    grid-template-columns: 1fr;
-    padding: 12px 18px;
-  }
-
-  .layout-simple-clean .resume-aside,
-  .layout-classic-serif .resume-aside,
-  .layout-modern-timeline .resume-aside {
+  .resume-sheet:not(.pdf-export).layout-minimal .resume-aside {
     grid-template-columns: 1fr;
     padding: 12px 18px;
   }
 
-  .layout-minimal .resume-main {
+  .resume-sheet:not(.pdf-export).layout-simple-clean .resume-aside,
+  .resume-sheet:not(.pdf-export).layout-classic-serif .resume-aside,
+  .resume-sheet:not(.pdf-export).layout-modern-timeline .resume-aside {
+    grid-template-columns: 1fr;
+    padding: 12px 18px;
+  }
+
+  .resume-sheet:not(.pdf-export).layout-minimal .resume-main {
     padding: 16px 18px;
   }
 
-  .layout-simple-clean .resume-main,
-  .layout-classic-serif .resume-main,
-  .layout-modern-timeline .resume-main,
-  .layout-modern-grid .resume-main,
-  .layout-modern-grid .resume-aside {
+  .resume-sheet:not(.pdf-export).layout-simple-clean .resume-main,
+  .resume-sheet:not(.pdf-export).layout-classic-serif .resume-main,
+  .resume-sheet:not(.pdf-export).layout-modern-timeline .resume-main,
+  .resume-sheet:not(.pdf-export).layout-modern-grid .resume-main,
+  .resume-sheet:not(.pdf-export).layout-modern-grid .resume-aside {
     padding: 16px 18px;
   }
 
-  .header-main {
+  .resume-sheet:not(.pdf-export) .header-main {
     max-width: 100%;
   }
 
-  .header-name {
+  .resume-sheet:not(.pdf-export) .header-name {
     font-size: 1.48rem;
   }
 
-  .profile-avatar {
+  .resume-sheet:not(.pdf-export) .profile-avatar {
     width: 72px;
     height: 72px;
   }
@@ -1635,22 +1635,6 @@ a {
   box-shadow: none !important;
   border-radius: 0 !important;
   overflow: hidden !important;
-}
-
-.pdf-export.resume-sheet.paper-a4 {
-  width: 210mm !important;
-  min-width: 210mm !important;
-  max-width: 210mm !important;
-  height: 297mm !important;
-  min-height: 297mm !important;
-}
-
-.pdf-export.resume-sheet.paper-letter {
-  width: 216mm !important;
-  min-width: 216mm !important;
-  max-width: 216mm !important;
-  height: 279mm !important;
-  min-height: 279mm !important;
 }
 
 @media print {

@@ -10,7 +10,7 @@ const display = useDisplay()
 
 const navItems = [
   {
-    label: 'Curriculos',
+    label: 'Currículos',
     icon: 'mdi-folder-account-outline',
     to: '/curriculos',
   },
@@ -40,7 +40,7 @@ const activeNavPath = computed(() => {
   return byPrefix?.to || '/curriculos'
 })
 
-const activeNavLabel = computed(() => navItems.find((item) => item.to === activeNavPath.value)?.label || 'Curriculos')
+const activeNavLabel = computed(() => navItems.find((item) => item.to === activeNavPath.value)?.label || 'Currículos')
 const topBarHeight = computed(() => (isMobileNav.value ? 64 : 70))
 
 const isActive = (itemPath) => activeNavPath.value === itemPath
@@ -62,7 +62,7 @@ const navigate = (path) => {
           </v-avatar>
           <div>
             <p class="text-subtitle-2 font-weight-bold mb-0">Resume Studio Pro</p>
-            <p class="text-caption text-medium-emphasis mb-0">Gestao, edicao e exportacao PDF</p>
+            <p class="text-caption text-medium-emphasis mb-0">Gestão, edição e exportação PDF</p>
           </div>
         </div>
 
