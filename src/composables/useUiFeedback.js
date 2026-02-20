@@ -18,7 +18,7 @@ const state = reactive({
   },
   confirm: {
     open: false,
-    title: 'Confirmar acao',
+    title: 'Confirmar ação',
     message: '',
     confirmText: 'Confirmar',
     cancelText: 'Cancelar',
@@ -78,7 +78,7 @@ const closeConfirm = (decision) => {
 
   Object.assign(state.confirm, {
     open: false,
-    title: 'Confirmar acao',
+    title: 'Confirmar ação',
     message: '',
     confirmText: 'Confirmar',
     cancelText: 'Cancelar',
@@ -94,7 +94,7 @@ const closeConfirm = (decision) => {
 }
 
 const confirm = ({
-  title = 'Confirmar acao',
+  title = 'Confirmar ação',
   message = 'Deseja continuar?',
   confirmText = 'Confirmar',
   cancelText = 'Cancelar',
@@ -109,7 +109,7 @@ const confirm = ({
 
     Object.assign(state.confirm, {
       open: true,
-      title: String(title || '').trim() || 'Confirmar acao',
+      title: String(title || '').trim() || 'Confirmar ação',
       message: String(message || '').trim() || 'Deseja continuar?',
       confirmText: String(confirmText || '').trim() || 'Confirmar',
       cancelText: String(cancelText || '').trim() || 'Cancelar',

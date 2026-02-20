@@ -1,22 +1,16 @@
-# Gerador de Curriculo (Vue + Vuetify)
+# Resume Studio Pro (Vue + Vuetify)
 
-Projeto de geracao de curriculo completo com multiplos formatos visuais:
+Editor e gerenciador de currículos com foco em produtividade, visual profissional e exportação em PDF.
 
-- Classico
-- Sidebar
-- Minimalista
-- Criativo
+## Recursos atuais
 
-## Recursos
-
-- Formulario completo: dados pessoais, resumo, experiencia, formacao, projetos, skills, idiomas, certificacoes e interesses.
-- Adicao/remocao dinamica de blocos.
-- Troca de formato visual em tempo real.
-- Troca de tamanho de folha (A4 / US Letter).
-- Escolha de cor principal do template.
-- Upload de foto por arquivo local (PNG/JPG/WEBP) ou URL.
-- Pre-visualizacao pronta para impressao.
-- Botao "Gerar PDF" (via `window.print()` do navegador).
+- CRUD completo de currículos com persistência em `localStorage`.
+- Templates (clássicos, simples, profissionais e modernos).
+- Edição por seções: dados pessoais, resumo, experiências, formação, projetos, skills, idiomas, certificações e interesses.
+- Pré-visualização dedicada com ajuste automático para 1 página.
+- Exportação de PDF com `html2pdf.js` (layout estabilizado entre desktop e mobile).
+- Feedback visual com snackbar e confirmações customizadas.
+- Interface responsiva para desktop, tablet e celular.
 
 ## Rodar localmente
 
@@ -25,7 +19,7 @@ npm install
 npm run dev
 ```
 
-## Build de producao
+## Build de produção
 
 ```bash
 npm run build

@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useDisplay } from 'vuetify'
 
-const props = defineProps({
+defineProps({
   records: {
     type: Array,
     default: () => [],
@@ -26,7 +26,7 @@ const useCompactActions = computed(() => display.smAndDown.value)
 
     <v-divider />
 
-    <v-list lines="two" density="comfortable">
+    <v-list lines="two" density="compact">
       <v-list-item
         v-for="record in records"
         :key="record.id"
@@ -60,7 +60,7 @@ const useCompactActions = computed(() => display.smAndDown.value)
               />
             </template>
 
-            <v-list density="comfortable" class="mobile-record-menu">
+            <v-list density="compact" class="mobile-record-menu">
               <v-list-item prepend-icon="mdi-eye-outline" title="Visualizar" @click="emit('preview', record.id)" />
               <v-list-item prepend-icon="mdi-pencil-outline" title="Editar" @click="emit('edit', record.id)" />
               <v-list-item prepend-icon="mdi-content-copy" title="Duplicar" @click="emit('duplicate', record.id)" />

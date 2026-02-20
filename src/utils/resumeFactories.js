@@ -54,14 +54,14 @@ export const createProject = (overrides = {}) => ({
 export const createSkill = (overrides = {}) => ({
   id: nextId(),
   name: '',
-  level: 'Intermediario',
+  level: 'Intermediário',
   ...overrides,
 })
 
 export const createLanguage = (overrides = {}) => ({
   id: nextId(),
   name: '',
-  level: 'Intermediario',
+  level: 'Intermediário',
   ...overrides,
 })
 
@@ -138,7 +138,7 @@ const normalizeSkill = (value = {}) =>
   applyKnownId(
     createSkill({
       name: ensureString(value.name),
-      level: ensureString(value.level) || 'Intermediario',
+      level: ensureString(value.level) || 'Intermediário',
     }),
     value.id,
   )
@@ -147,7 +147,7 @@ const normalizeLanguage = (value = {}) =>
   applyKnownId(
     createLanguage({
       name: ensureString(value.name),
-      level: ensureString(value.level) || 'Intermediario',
+      level: ensureString(value.level) || 'Intermediário',
     }),
     value.id,
   )
@@ -195,13 +195,29 @@ export const normalizeResumeData = (payload = {}) => {
   }
 }
 
-export const cloneResumeData = (value) => JSON.parse(JSON.stringify(value))
+export const cloneResumeData = (value) => {
+  if (typeof globalThis.structuredClone === 'function') {
+    try {
+      return globalThis.structuredClone(value)
+    } catch (error) {
+      console.warn('Falha no structuredClone, aplicando fallback JSON.', error)
+    }
+  }
+  if (typeof value === 'undefined') return undefined
+
+  try {
+    return JSON.parse(JSON.stringify(value))
+  } catch (error) {
+    console.warn('Falha no clone por JSON, retornando valor original.', error)
+    return value
+  }
+}
 
 export const buildDefaultResumeTitle = (data) => {
   const name = ensureString(data?.personal?.fullName).trim()
   const role = ensureString(data?.personal?.role).trim()
   if (name && role) return `${name} - ${role}`
-  return name || role || 'Curriculo sem nome'
+  return name || role || 'Currículo sem nome'
 }
 
 export const createSampleResumeData = () => ({
@@ -210,7 +226,7 @@ export const createSampleResumeData = () => ({
     role: 'Product Designer Senior',
     email: 'ana.ribeiro@email.com',
     phone: '+55 11 98765-4321',
-    location: 'Sao Paulo, SP',
+    location: 'São Paulo, SP',
     website: 'anaribeiro.design',
     linkedin: 'ana-ribeiro-design',
     github: 'anaribeiro',
@@ -218,7 +234,7 @@ export const createSampleResumeData = () => ({
     photoData: '',
   },
   summary:
-    'Designer de produto com 8 anos de experiencia em plataformas SaaS. Especialista em discovery, arquitetura de informacao e design system orientado a metricas de negocio.',
+    'Designer de produto com 8 anos de experiência em plataformas SaaS. Especialista em discovery, arquitetura de informação e design system orientado a métricas de negócio.',
   experiences: [
     createExperience({
       role: 'Product Designer Senior',
@@ -233,7 +249,7 @@ export const createSampleResumeData = () => ({
     createExperience({
       role: 'UX/UI Designer',
       company: 'Wave Tech',
-      location: 'Sao Paulo, SP',
+      location: 'São Paulo, SP',
       start: '2019-01',
       end: '2022-02',
       current: false,
@@ -245,7 +261,7 @@ export const createSampleResumeData = () => ({
     createEducation({
       degree: 'MBA em UX Design',
       institution: 'FIAP',
-      location: 'Sao Paulo, SP',
+      location: 'São Paulo, SP',
       start: '2020-02',
       end: '2021-12',
       notes: 'Projeto final focado em acessibilidade para fintechs.',
@@ -253,7 +269,7 @@ export const createSampleResumeData = () => ({
     createEducation({
       degree: 'Bacharelado em Design Digital',
       institution: 'Mackenzie',
-      location: 'Sao Paulo, SP',
+      location: 'São Paulo, SP',
       start: '2013-02',
       end: '2016-12',
       notes: '',
@@ -265,25 +281,25 @@ export const createSampleResumeData = () => ({
       role: 'Lead Designer',
       link: 'https://dribbble.com',
       description:
-        'Template analitico com foco em churn e health score. Entrega adotada por 4 squads de produto.',
+        'Template analítico com foco em churn e health score. Entrega adotada por 4 squads de produto.',
     }),
     createProject({
       name: 'Kit de Design Ops',
       role: 'Criadora',
       link: '',
-      description: 'Conjunto de rituais, templates e metricas para escalar produtividade do time de design.',
+      description: 'Conjunto de rituais, templates e métricas para escalar produtividade do time de design.',
     }),
   ],
   skills: [
     createSkill({ name: 'Product Discovery', level: 'Especialista' }),
-    createSkill({ name: 'Design System', level: 'Avancado' }),
+    createSkill({ name: 'Design System', level: 'Avançado' }),
     createSkill({ name: 'Figma', level: 'Especialista' }),
-    createSkill({ name: 'Analise de dados', level: 'Intermediario' }),
+    createSkill({ name: 'Análise de dados', level: 'Intermediário' }),
   ],
   languages: [
-    createLanguage({ name: 'Portugues', level: 'Nativo' }),
-    createLanguage({ name: 'Ingles', level: 'Fluente' }),
-    createLanguage({ name: 'Espanhol', level: 'Intermediario' }),
+    createLanguage({ name: 'Português', level: 'Nativo' }),
+    createLanguage({ name: 'Inglês', level: 'Fluente' }),
+    createLanguage({ name: 'Espanhol', level: 'Intermediário' }),
   ],
   certifications: [
     createCertification({ name: 'Google UX Design', issuer: 'Google', year: '2022' }),

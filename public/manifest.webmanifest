@@ -1,0 +1,20 @@
+{
+  "name": "Resume Studio Pro",
+  "short_name": "Resume Studio",
+  "description": "Editor e gerenciador de currículos com exportação em PDF.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "lang": "pt-BR",
+  "background_color": "#EAF0F6",
+  "theme_color": "#0B4F6C",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

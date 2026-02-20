@@ -190,7 +190,7 @@ const photoPreviewSrc = computed(() => {
     <div class="resume-body">
       <aside class="resume-aside">
         <section v-if="skillsForPreview.length" class="resume-section">
-          <h3 class="section-title">Competencias</h3>
+          <h3 class="section-title">Competências</h3>
           <div class="tag-list">
             <span v-for="skill in skillsForPreview" :key="skill.id" class="tag">
               {{ skill.name }}
@@ -210,7 +210,7 @@ const photoPreviewSrc = computed(() => {
         </section>
 
         <section v-if="certificationsForPreview.length" class="resume-section">
-          <h3 class="section-title">Certificacoes</h3>
+          <h3 class="section-title">Certificações</h3>
           <article v-for="certification in certificationsForPreview" :key="certification.id" class="entry compact">
             <h4 class="entry-title">{{ certification.name }}</h4>
             <p class="entry-subtitle">
@@ -233,7 +233,7 @@ const photoPreviewSrc = computed(() => {
         </section>
 
         <section v-if="experiencesForPreview.length" class="resume-section">
-          <h3 class="section-title">Experiencia</h3>
+          <h3 class="section-title">Experiência</h3>
           <article v-for="experience in experiencesForPreview" :key="experience.id" class="entry">
             <div class="entry-title-line">
               <h4 class="entry-title">{{ experience.role || 'Cargo' }}</h4>
@@ -255,14 +255,14 @@ const photoPreviewSrc = computed(() => {
         </section>
 
         <section v-if="educationForPreview.length" class="resume-section">
-          <h3 class="section-title">Formacao</h3>
+          <h3 class="section-title">Formação</h3>
           <article v-for="education in educationForPreview" :key="education.id" class="entry">
             <div class="entry-title-line">
               <h4 class="entry-title">{{ education.degree || 'Curso' }}</h4>
               <span class="entry-date">{{ formatPeriod(education.start, education.end, false) }}</span>
             </div>
             <p class="entry-subtitle">
-              {{ education.institution || 'Instituicao' }}
+              {{ education.institution || 'Instituição' }}
               <template v-if="education.location"> - {{ education.location }}</template>
             </p>
             <p v-if="education.notes" class="paragraph compact">{{ education.notes }}</p>
@@ -284,8 +284,8 @@ const photoPreviewSrc = computed(() => {
         </section>
 
         <section v-if="showEmptyState && !hasMainPreviewContent" class="resume-section empty-preview">
-          <h3 class="section-title">Curriculo em branco</h3>
-          <p class="paragraph">Preencha os dados no editor para montar a versao final.</p>
+          <h3 class="section-title">Currículo em branco</h3>
+          <p class="paragraph">Preencha os dados no editor para montar a versão final.</p>
         </section>
       </main>
     </div>

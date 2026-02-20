@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { useDisplay } from 'vuetify'
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import ResumeEditorForm from '../components/resume/ResumeEditorForm.vue'
@@ -31,8 +31,80 @@ const hasUnsavedChanges = ref(false)
 const savingFromQuickBar = ref(false)
 const previewingFromQuickBar = ref(false)
 let suspendDirtyTracking = false
+let stopDirtyWatcher = null
+let draftAutoSaveTimer = null
+let lastDraftSignature = ''
+let routeLoadToken = 0
+
+const DRAFT_AUTO_SAVE_INTERVAL_MS = 1600
 
 const editorData = reactive(createEmptyResumeData())
+
+const atsChecklist = computed(() => {
+  const summaryLength = (editorData.summary || '').trim().length
+  const experiences = Array.isArray(editorData.experiences) ? editorData.experiences : []
+  const experiencesWithBullets = experiences.filter((experience) => {
+    const highlights = String(experience?.highlights || '')
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+    return highlights.length >= 2
+  }).length
+  const skillsCount = (Array.isArray(editorData.skills) ? editorData.skills : []).filter((skill) =>
+    String(skill?.name || '').trim(),
+  ).length
+  const hasProject = (Array.isArray(editorData.projects) ? editorData.projects : []).some((project) =>
+    [project?.name, project?.description].join('').trim(),
+  )
+  const hasCertification = (Array.isArray(editorData.certifications) ? editorData.certifications : []).some((item) =>
+    [item?.name, item?.issuer].join('').trim(),
+  )
+
+  return [
+    {
+      id: 'identity',
+      label: 'Nome e objetivo profissional preenchidos',
+      ok: Boolean(editorData.personal.fullName.trim()) && Boolean(editorData.personal.role.trim()),
+    },
+    {
+      id: 'contact',
+      label: 'Contato principal (e-mail e telefone)',
+      ok: Boolean(editorData.personal.email.trim()) && Boolean(editorData.personal.phone.trim()),
+    },
+    {
+      id: 'summary',
+      label: 'Resumo com pelo menos 120 caracteres',
+      ok: summaryLength >= 120,
+    },
+    {
+      id: 'experience',
+      label: 'Experiência com resultados (2+ bullets)',
+      ok: experiencesWithBullets > 0,
+    },
+    {
+      id: 'skills',
+      label: 'Pelo menos 5 competências relevantes',
+      ok: skillsCount >= 5,
+    },
+    {
+      id: 'content',
+      label: 'Projeto ou certificação adicionados',
+      ok: hasProject || hasCertification,
+    },
+  ]
+})
+const atsScore = computed(() => {
+  const total = atsChecklist.value.length
+  const done = atsChecklist.value.filter((item) => item.ok).length
+  return total ? Math.round((done / total) * 100) : 0
+})
+const atsScoreColor = computed(() => {
+  if (atsScore.value >= 85) return 'success'
+  if (atsScore.value >= 60) return 'warning'
+  return 'error'
+})
+const versionHistory = computed(() => (recordId.value ? manager.getRecordHistory(recordId.value) : []))
+const visibleVersionHistory = computed(() => versionHistory.value.slice(0, 5))
 
 const ensureRouteId = () => {
   const paramValue = route.params.id
@@ -54,8 +126,127 @@ const runWithoutDirtyTracking = (callback) => {
   }
 }
 
+const stopDirtyTracker = () => {
+  if (!stopDirtyWatcher) return
+  stopDirtyWatcher()
+  stopDirtyWatcher = null
+}
+
+const startDirtyTracker = () => {
+  stopDirtyTracker()
+  stopDirtyWatcher = watch(
+    [resumeTitle, selectedTemplate, selectedPaper, accentColor, editorData],
+    () => {
+      if (suspendDirtyTracking) return
+      hasUnsavedChanges.value = true
+      stopDirtyTracker()
+    },
+    {
+      deep: true,
+      flush: 'post',
+    },
+  )
+}
+
 const markClean = () => {
   hasUnsavedChanges.value = false
+  startDirtyTracker()
+}
+
+const notifyStorageWarning = () => {
+  const message = manager.consumeStorageWarning()
+  if (!message) return
+  feedback.warning({
+    title: 'Armazenamento local',
+    message,
+  })
+}
+
+const buildEditorPayload = () => ({
+  title: resumeTitle.value,
+  template: selectedTemplate.value,
+  paper: selectedPaper.value,
+  accentColor: accentColor.value,
+  data: cloneResumeData(editorData),
+})
+
+const buildPayloadSignature = (payload) =>
+  JSON.stringify({
+    title: String(payload?.title || '').trim(),
+    template: payload?.template || '',
+    paper: payload?.paper || '',
+    accentColor: payload?.accentColor || '',
+    data: payload?.data || {},
+  })
+
+const resolveDraftTarget = () => ensureRouteId() || recordId.value || 'new'
+
+const stopDraftAutosave = () => {
+  if (!draftAutoSaveTimer) return
+  window.clearInterval(draftAutoSaveTimer)
+  draftAutoSaveTimer = null
+}
+
+const persistDraftIfNeeded = () => {
+  if (!hasUnsavedChanges.value) return
+
+  const payload = buildEditorPayload()
+  const signature = buildPayloadSignature(payload)
+  if (signature === lastDraftSignature) return
+
+  manager.saveEditorDraft(resolveDraftTarget(), payload)
+  lastDraftSignature = signature
+  notifyStorageWarning()
+}
+
+const startDraftAutosave = () => {
+  if (draftAutoSaveTimer) return
+  draftAutoSaveTimer = window.setInterval(() => {
+    persistDraftIfNeeded()
+  }, DRAFT_AUTO_SAVE_INTERVAL_MS)
+}
+
+const applyDraftModel = (draft) => {
+  runWithoutDirtyTracking(() => {
+    resumeTitle.value = draft.title || ''
+    selectedTemplate.value = draft.template || 'classic'
+    selectedPaper.value = draft.paper || 'a4'
+    accentColor.value = draft.accentColor || '#0B4F6C'
+    replaceEditorData(draft.data || createEmptyResumeData())
+  })
+  hasUnsavedChanges.value = true
+  stopDirtyTracker()
+}
+
+const maybeRestoreDraft = async ({ targetId, recordUpdatedAt = '' }) => {
+  const draft = manager.getEditorDraft(targetId)
+  if (!draft) return
+
+  const currentSignature = buildPayloadSignature(buildEditorPayload())
+  const draftSignature = buildPayloadSignature(draft)
+  if (currentSignature === draftSignature) return
+
+  const draftTime = new Date(draft.updatedAt).getTime()
+  const recordTime = new Date(recordUpdatedAt).getTime()
+  const draftIsRecent = Number.isNaN(recordTime) || (!Number.isNaN(draftTime) && draftTime >= recordTime)
+
+  if (!draftIsRecent) return
+
+  const confirmed = await feedback.confirm({
+    title: 'Rascunho automático encontrado',
+    message: 'Foi encontrado um rascunho mais recente para este currículo. Deseja restaurar?',
+    confirmText: 'Restaurar rascunho',
+    cancelText: 'Manter versão atual',
+    color: 'info',
+    icon: 'mdi-history',
+  })
+  if (!confirmed) return
+
+  applyDraftModel(draft)
+  feedback.info({
+    title: 'Rascunho restaurado',
+    message: 'As alterações do rascunho automático foram aplicadas no editor.',
+  })
 }
 
 const currentTemplateTitle = computed(
@@ -68,7 +259,6 @@ const currentPaperTitle = computed(
 
 const editorModeLabel = computed(() => (recordId.value ? 'Editando currículo salvo' : 'Novo currículo'))
 const isMobile = computed(() => display.mdAndDown.value)
-const fieldDensity = computed(() => (display.smAndDown.value ? 'comfortable' : 'compact'))
 const templateChipSize = computed(() => (display.smAndDown.value ? 'default' : 'small'))
 
 const applyEditorModel = (model) => {
@@ -84,12 +274,16 @@ const applyEditorModel = (model) => {
   markClean()
 }
 
-const loadFromRoute = () => {
+const loadFromRoute = async () => {
+  const loadToken = ++routeLoadToken
   const routeId = ensureRouteId()
 
   if (!routeId) {
     notFound.value = false
     applyEditorModel(manager.createEditorModel())
+    if (loadToken === routeLoadToken) {
+      await maybeRestoreDraft({ targetId: 'new' })
+    }
     return
   }
 
@@ -98,11 +292,20 @@ const loadFromRoute = () => {
   if (!existingRecord) {
     notFound.value = true
     applyEditorModel(manager.createEditorModel())
+    if (loadToken === routeLoadToken) {
+      await maybeRestoreDraft({ targetId: routeId })
+    }
     return
   }
 
   notFound.value = false
   applyEditorModel(manager.createEditorModel(routeId))
+  if (loadToken === routeLoadToken) {
+    await maybeRestoreDraft({
+      targetId: routeId,
+      recordUpdatedAt: existingRecord.updatedAt,
+    })
+  }
 }
 
 const confirmDiscardChanges = async () => {
@@ -119,20 +322,43 @@ const confirmDiscardChanges = async () => {
 
 const saveEditor = async ({ silent = false } = {}) => {
   const isEditing = Boolean(recordId.value)
-  const savedRecord = manager.saveEditorModel({
-    id: recordId.value,
-    title: resumeTitle.value,
-    template: selectedTemplate.value,
-    paper: selectedPaper.value,
-    accentColor: accentColor.value,
-    data: cloneResumeData(editorData),
-  })
+  let savedRecord = null
+  try {
+    savedRecord = manager.saveEditorModel({
+      id: recordId.value,
+      title: resumeTitle.value,
+      template: selectedTemplate.value,
+      paper: selectedPaper.value,
+      accentColor: accentColor.value,
+      data: cloneResumeData(editorData),
+    })
+  } catch (error) {
+    console.error(error)
+    feedback.error({
+      title: 'Falha ao salvar',
+      message: 'Não foi possível salvar o currículo. Tente novamente.',
+    })
+    notifyStorageWarning()
+    return null
+  }
+
+  if (!savedRecord?.id) {
+    feedback.error({
+      title: 'Falha ao salvar',
+      message: 'Não foi possível salvar o currículo. Tente novamente.',
+    })
+    notifyStorageWarning()
+    return null
+  }
 
   runWithoutDirtyTracking(() => {
     recordId.value = savedRecord.id
     resumeTitle.value = savedRecord.title
   })
   markClean()
+  lastDraftSignature = ''
+  manager.clearEditorDraft('new')
+  manager.clearEditorDraft(savedRecord.id)
 
   if (ensureRouteId() !== savedRecord.id) {
     await router.replace({ name: 'resume-edit', params: { id: savedRecord.id } })
@@ -145,11 +371,14 @@ const saveEditor = async ({ silent = false } = {}) => {
     })
   }
 
+  notifyStorageWarning()
+
   return savedRecord
 }
 
 const saveAndPreview = async () => {
   const savedRecord = await saveEditor({ silent: true })
+  if (!savedRecord?.id) return
   feedback.info({
     title: 'Abrindo pré-visualização',
     message: `Visualizando "${savedRecord.title}" em tela dedicada.`,
@@ -194,10 +423,13 @@ const clearEditor = async () => {
   if (!confirmed) return
 
   applyEditorModel(manager.createEditorModel())
+  manager.clearEditorDraft('new')
+  lastDraftSignature = ''
   feedback.info({
     title: 'Editor limpo',
     message: 'Todos os campos foram redefinidos para um novo currículo.',
   })
+  notifyStorageWarning()
 }
 
 const loadSampleData = async () => {
@@ -244,6 +476,36 @@ const reloadFromSavedRecord = async () => {
   })
 }
 
+const restoreVersion = async (versionId) => {
+  if (!recordId.value || !versionId) return
+
+  const confirmed = await feedback.confirm({
+    title: 'Restaurar versão',
+    message: 'Restaurar esta versão e substituir o conteúdo atual do editor?',
+    confirmText: 'Restaurar',
+    cancelText: 'Cancelar',
+    color: 'warning',
+    icon: 'mdi-history',
+  })
+  if (!confirmed) return
+
+  const restored = manager.restoreRecordVersion(recordId.value, versionId)
+  if (!restored) {
+    feedback.error({
+      title: 'Falha na restauração',
+      message: 'Não foi possível restaurar a versão selecionada.',
+    })
+    return
+  }
+
+  applyEditorModel(manager.createEditorModel(recordId.value))
+  feedback.success({
+    title: 'Versão restaurada',
+    message: 'A versão selecionada foi aplicada ao currículo.',
+  })
+  notifyStorageWarning()
+}
+
 onBeforeRouteLeave(async () => {
   if (!hasUnsavedChanges.value) {
     return true
@@ -260,24 +522,40 @@ onBeforeRouteLeave(async () => {
 })
 
 watch(
-  [resumeTitle, selectedTemplate, selectedPaper, accentColor, editorData],
-  () => {
-    if (suspendDirtyTracking || hasUnsavedChanges.value) return
-    hasUnsavedChanges.value = true
-  },
-  {
-    deep: true,
-    flush: 'sync',
-  },
-)
-
-watch(
   () => route.params.id,
-  () => {
-    loadFromRoute()
+  async () => {
+    await loadFromRoute()
   },
   { immediate: true },
 )
+
+watch(
+  () => hasUnsavedChanges.value,
+  (dirty) => {
+    if (!dirty) {
+      stopDraftAutosave()
+      return
+    }
+
+    persistDraftIfNeeded()
+    startDraftAutosave()
+  },
+  { immediate: true },
+)
+
+watch(
+  () => manager.storageWarning.value,
+  (value) => {
+    if (!value) return
+    notifyStorageWarning()
+  },
+  { immediate: true },
+)
+
+onBeforeUnmount(() => {
+  stopDirtyTracker()
+  stopDraftAutosave()
+})
 </script>
 
 <template>
@@ -337,7 +615,7 @@ watch(
               <v-text-field
                 v-model="resumeTitle"
                 label="Nome interno do currículo"
-                :density="fieldDensity"
+                density="compact"
                 variant="outlined"
                 class="mb-2"
               />
@@ -365,7 +643,7 @@ watch(
                     item-title="title"
                     item-value="value"
                     label="Tamanho da folha"
-                    :density="fieldDensity"
+                    density="compact"
                     variant="outlined"
                   />
                 </v-col>
@@ -376,13 +654,61 @@ watch(
                     item-title="title"
                     item-value="value"
                     label="Cor principal"
-                    :density="fieldDensity"
+                    density="compact"
                     variant="outlined"
                   />
                 </v-col>
               </v-row>
 
-              <v-alert v-if="hasUnsavedChanges" type="warning" :density="fieldDensity" variant="tonal" class="mb-3">
+              <v-sheet rounded="lg" class="mb-3 pa-3" border>
+                <div class="d-flex justify-space-between align-center mb-2">
+                  <p class="text-caption font-weight-bold mb-0">Score ATS</p>
+                  <v-chip :color="atsScoreColor" size="small" variant="tonal">{{ atsScore }}%</v-chip>
+                </div>
+                <v-progress-linear :model-value="atsScore" :color="atsScoreColor" height="8" rounded class="mb-3" />
+                <div class="d-flex flex-column ga-1">
+                  <p
+                    v-for="item in atsChecklist"
+                    :key="item.id"
+                    class="text-caption mb-0 d-flex align-center ga-2"
+                    :class="item.ok ? 'text-success' : 'text-medium-emphasis'"
+                  >
+                    <v-icon :icon="item.ok ? 'mdi-check-circle' : 'mdi-circle-outline'" size="14" />
+                    <span>{{ item.label }}</span>
+                  </p>
+                </div>
+              </v-sheet>
+
+              <v-sheet v-if="recordId" rounded="lg" class="mb-3 pa-3" border>
+                <p class="text-caption font-weight-bold mb-2">Histórico de versões</p>
+                <v-list density="compact" class="bg-transparent pa-0">
+                  <v-list-item v-for="version in visibleVersionHistory" :key="version.id" class="px-0">
+                    <template #title>
+                      <span class="text-caption font-weight-medium">{{ version.title }}</span>
+                    </template>
+                    <template #subtitle>
+                      <span class="text-caption text-medium-emphasis">
+                        {{ manager.formatRecordDateTime(version.timestamp) }}
+                      </span>
+                    </template>
+                    <template #append>
+                      <v-btn
+                        size="x-small"
+                        variant="tonal"
+                        prepend-icon="mdi-history"
+                        @click="restoreVersion(version.id)"
+                      >
+                        Restaurar
+                      </v-btn>
+                    </template>
+                  </v-list-item>
+                </v-list>
+                <p v-if="!visibleVersionHistory.length" class="text-caption text-medium-emphasis mb-0">
+                  Nenhuma versão anterior disponível.
+                </p>
+              </v-sheet>
+
+              <v-alert v-if="hasUnsavedChanges" type="warning" density="compact" variant="tonal" class="mb-3">
                 Existem alterações não salvas.
               </v-alert>
 

@@ -14,6 +14,15 @@ const manager = useResumeManager()
 const feedback = useUiFeedback()
 const display = useDisplay()
 
+const notifyStorageWarning = () => {
+  const message = manager.consumeStorageWarning()
+  if (!message) return
+  feedback.warning({
+    title: 'Armazenamento local',
+    message,
+  })
+}
+
 const exportingPdf = ref(false)
 const pdfTarget = ref(null)
 const onePageMode = ref(true)
@@ -45,7 +54,6 @@ const fitStatus = computed(() => {
   return { color: 'warning', label: `Ainda excede ${Math.round(overflowPx.value)}px` }
 })
 const isMobile = computed(() => display.mdAndDown.value)
-const controlDensity = computed(() => (display.smAndDown.value ? 'comfortable' : 'compact'))
 
 const waitFrame = () =>
   new Promise((resolve) => {
@@ -134,6 +142,7 @@ const deleteCurrentRecord = async () => {
     title: 'Currículo excluído',
     message: 'O registro foi removido com sucesso.',
   })
+  notifyStorageWarning()
 
   router.push({ name: 'resumes-dashboard' })
 }
@@ -153,6 +162,7 @@ const duplicateCurrentRecord = () => {
     title: 'Currículo duplicado',
     message: `"${duplicated.title}" foi criado e aberto para edição.`,
   })
+  notifyStorageWarning()
   router.push({ name: 'resume-edit', params: { id: duplicated.id } })
 }
 
@@ -195,6 +205,15 @@ watch(
   () => [record.value?.id, record.value?.updatedAt, onePageMode.value],
   () => {
     applyOnePageFit()
+  },
+  { immediate: true },
+)
+
+watch(
+  () => manager.storageWarning.value,
+  (value) => {
+    if (!value) return
+    notifyStorageWarning()
   },
   { immediate: true },
 )
@@ -286,7 +305,7 @@ onBeforeUnmount(() => {
               v-model="onePageMode"
               color="primary"
               hide-details
-              :density="controlDensity"
+              density="compact"
               inset
               class="mb-2"
               label="Modo 1 página automático"

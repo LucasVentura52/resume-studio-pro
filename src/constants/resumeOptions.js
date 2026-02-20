@@ -1,7 +1,7 @@
 export const templateOptions = [
-  { title: 'Classico - Base', value: 'classic' },
-  { title: 'Classico - Serif', value: 'classic-serif' },
-  { title: 'Classico - Formal', value: 'classic-formal' },
+  { title: 'Clássico - Base', value: 'classic' },
+  { title: 'Clássico - Serif', value: 'classic-serif' },
+  { title: 'Clássico - Formal', value: 'classic-formal' },
   { title: 'Simples - Clean', value: 'simple-clean' },
   { title: 'Simples - Compacto', value: 'simple-compact' },
   { title: 'Profissional - Executivo', value: 'professional-executive' },
@@ -19,12 +19,12 @@ export const paperOptions = [
 ]
 
 export const accentOptions = [
-  { title: 'Azul petroleo', value: '#0B4F6C' },
+  { title: 'Azul petróleo', value: '#0B4F6C' },
   { title: 'Azul royal', value: '#2454A6' },
   { title: 'Verde escuro', value: '#1D6F42' },
   { title: 'Bordo', value: '#7A1F32' },
   { title: 'Cinza grafite', value: '#25303F' },
 ]
 
-export const levelOptions = ['Basico', 'Intermediario', 'Avancado', 'Especialista']
-export const languageLevelOptions = ['Basico', 'Intermediario', 'Avancado', 'Fluente', 'Nativo']
+export const levelOptions = ['Básico', 'Intermediário', 'Avançado', 'Especialista']
+export const languageLevelOptions = ['Básico', 'Intermediário', 'Avançado', 'Fluente', 'Nativo']
