@@ -39,7 +39,7 @@ const recordsForList = computed(() =>
       template: template || 'classic',
       subtitle: `${role} - Atualizado em ${manager.formatRecordDateTime(updatedAt)}`,
     }
-  }),
+  })
 )
 
 const filteredRecords = computed(() => {
@@ -66,7 +66,9 @@ const triggerBackupImport = () => {
 
 const exportBackup = () => {
   const payload = manager.exportBackup()
-  const file = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' })
+  const file = new Blob([JSON.stringify(payload, null, 2)], {
+    type: 'application/json;charset=utf-8',
+  })
   const url = URL.createObjectURL(file)
   const link = document.createElement('a')
   link.href = url
@@ -183,11 +185,17 @@ const duplicateRecord = (recordId) => {
               <p class="text-overline text-white font-weight-bold mb-1">Resume Studio Pro</p>
               <h1 class="text-h5 font-weight-bold mb-1">Gestão profissional de currículos</h1>
               <p class="text-body-2 text-white-80">
-                Centralize versões, edite com estrutura completa e exporte PDF final sem depender da impressão do navegador.
+                Centralize versões, edite com estrutura completa e exporte PDF final sem depender da
+                impressão do navegador.
               </p>
             </div>
             <div class="d-flex flex-wrap ga-2">
-              <v-btn color="white" class="text-primary font-weight-bold" prepend-icon="mdi-plus" @click="goToCreate">
+              <v-btn
+                color="white"
+                class="text-primary font-weight-bold"
+                prepend-icon="mdi-plus"
+                @click="goToCreate"
+              >
                 Novo currículo
               </v-btn>
               <v-btn
@@ -231,7 +239,11 @@ const duplicateRecord = (recordId) => {
             {{ latestRecord ? latestRecord.title : 'Nenhum currículo salvo' }}
           </p>
           <p class="text-caption text-medium-emphasis">
-            {{ latestRecord ? manager.formatRecordDateTime(latestRecord.updatedAt) : 'Crie um currículo para iniciar.' }}
+            {{
+              latestRecord
+                ? manager.formatRecordDateTime(latestRecord.updatedAt)
+                : 'Crie um currículo para iniciar.'
+            }}
           </p>
         </v-card>
       </v-col>

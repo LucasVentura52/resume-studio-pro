@@ -104,7 +104,10 @@ const waitNextFrame = () =>
 
 const clearFitLevelClass = (element) => {
   if (!element) return
-  element.className = element.className.replace(FIT_LEVEL_CLASS_REGEX, '').replace(/\s+/g, ' ').trim()
+  element.className = element.className
+    .replace(FIT_LEVEL_CLASS_REGEX, '')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 const setFitLevelClass = (element, level) => {

@@ -40,7 +40,9 @@ const activeNavPath = computed(() => {
   return byPrefix?.to || '/curriculos'
 })
 
-const activeNavLabel = computed(() => navItems.find((item) => item.to === activeNavPath.value)?.label || 'Currículos')
+const activeNavLabel = computed(
+  () => navItems.find((item) => item.to === activeNavPath.value)?.label || 'Currículos'
+)
 const topBarHeight = computed(() => (isMobileNav.value ? 64 : 70))
 
 const isActive = (itemPath) => activeNavPath.value === itemPath
@@ -100,7 +102,12 @@ const navigate = (path) => {
       grow
       height="66"
     >
-      <v-btn v-for="item in navItems" :key="`mobile-${item.to}`" :value="item.to" :aria-current="isActive(item.to) ? 'page' : undefined">
+      <v-btn
+        v-for="item in navItems"
+        :key="`mobile-${item.to}`"
+        :value="item.to"
+        :aria-current="isActive(item.to) ? 'page' : undefined"
+      >
         <v-icon :icon="item.icon" />
         <span>{{ item.label }}</span>
       </v-btn>

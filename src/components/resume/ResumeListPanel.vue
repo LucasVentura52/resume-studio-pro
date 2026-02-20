@@ -19,7 +19,9 @@ const useCompactActions = computed(() => display.smAndDown.value)
     <div class="d-flex align-center justify-space-between flex-wrap ga-2 pa-4 pb-2">
       <div>
         <p class="text-subtitle-1 font-weight-bold mb-1">Currículos salvos</p>
-        <p class="text-caption text-medium-emphasis">Visualize, edite, duplique ou exclua cada versão.</p>
+        <p class="text-caption text-medium-emphasis">
+          Visualize, edite, duplique ou exclua cada versão.
+        </p>
       </div>
       <v-btn color="primary" prepend-icon="mdi-plus" @click="emit('create')">Novo currículo</v-btn>
     </div>
@@ -45,7 +47,9 @@ const useCompactActions = computed(() => display.smAndDown.value)
         </template>
 
         <v-list-item-title class="font-weight-medium">{{ record.title }}</v-list-item-title>
-        <v-list-item-subtitle class="resume-list-subtitle">{{ record.subtitle }}</v-list-item-subtitle>
+        <v-list-item-subtitle class="resume-list-subtitle">{{
+          record.subtitle
+        }}</v-list-item-subtitle>
 
         <template #append>
           <v-menu v-if="useCompactActions" location="bottom end">
@@ -61,10 +65,27 @@ const useCompactActions = computed(() => display.smAndDown.value)
             </template>
 
             <v-list density="compact" class="mobile-record-menu">
-              <v-list-item prepend-icon="mdi-eye-outline" title="Visualizar" @click="emit('preview', record.id)" />
-              <v-list-item prepend-icon="mdi-pencil-outline" title="Editar" @click="emit('edit', record.id)" />
-              <v-list-item prepend-icon="mdi-content-copy" title="Duplicar" @click="emit('duplicate', record.id)" />
-              <v-list-item prepend-icon="mdi-delete-outline" title="Excluir" class="text-error" @click="emit('delete', record.id)" />
+              <v-list-item
+                prepend-icon="mdi-eye-outline"
+                title="Visualizar"
+                @click="emit('preview', record.id)"
+              />
+              <v-list-item
+                prepend-icon="mdi-pencil-outline"
+                title="Editar"
+                @click="emit('edit', record.id)"
+              />
+              <v-list-item
+                prepend-icon="mdi-content-copy"
+                title="Duplicar"
+                @click="emit('duplicate', record.id)"
+              />
+              <v-list-item
+                prepend-icon="mdi-delete-outline"
+                title="Excluir"
+                class="text-error"
+                @click="emit('delete', record.id)"
+              />
             </v-list>
           </v-menu>
 
@@ -132,7 +153,9 @@ const useCompactActions = computed(() => display.smAndDown.value)
           </v-avatar>
         </template>
         <v-list-item-title>Nenhum currículo salvo</v-list-item-title>
-        <v-list-item-subtitle>Clique em "Novo currículo" para iniciar o primeiro registro.</v-list-item-subtitle>
+        <v-list-item-subtitle
+          >Clique em "Novo currículo" para iniciar o primeiro registro.</v-list-item-subtitle
+        >
       </v-list-item>
     </v-list>
   </v-card>

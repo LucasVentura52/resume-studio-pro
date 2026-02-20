@@ -12,7 +12,11 @@ import {
 } from '../constants/resumeOptions'
 import { useResumeManager } from '../composables/useResumeManager'
 import { useUiFeedback } from '../composables/useUiFeedback'
-import { cloneResumeData, createEmptyResumeData, createSampleResumeData } from '../utils/resumeFactories'
+import {
+  cloneResumeData,
+  createEmptyResumeData,
+  createSampleResumeData,
+} from '../utils/resumeFactories'
 
 const route = useRoute()
 const router = useRouter()
@@ -51,14 +55,14 @@ const atsChecklist = computed(() => {
     return highlights.length >= 2
   }).length
   const skillsCount = (Array.isArray(editorData.skills) ? editorData.skills : []).filter((skill) =>
-    String(skill?.name || '').trim(),
+    String(skill?.name || '').trim()
   ).length
-  const hasProject = (Array.isArray(editorData.projects) ? editorData.projects : []).some((project) =>
-    [project?.name, project?.description].join('').trim(),
+  const hasProject = (Array.isArray(editorData.projects) ? editorData.projects : []).some(
+    (project) => [project?.name, project?.description].join('').trim()
   )
-  const hasCertification = (Array.isArray(editorData.certifications) ? editorData.certifications : []).some((item) =>
-    [item?.name, item?.issuer].join('').trim(),
-  )
+  const hasCertification = (
+    Array.isArray(editorData.certifications) ? editorData.certifications : []
+  ).some((item) => [item?.name, item?.issuer].join('').trim())
 
   return [
     {
@@ -103,7 +107,9 @@ const atsScoreColor = computed(() => {
   if (atsScore.value >= 60) return 'warning'
   return 'error'
 })
-const versionHistory = computed(() => (recordId.value ? manager.getRecordHistory(recordId.value) : []))
+const versionHistory = computed(() =>
+  recordId.value ? manager.getRecordHistory(recordId.value) : []
+)
 const visibleVersionHistory = computed(() => versionHistory.value.slice(0, 5))
 
 const ensureRouteId = () => {
@@ -144,7 +150,7 @@ const startDirtyTracker = () => {
     {
       deep: true,
       flush: 'post',
-    },
+    }
   )
 }
 
@@ -228,7 +234,8 @@ const maybeRestoreDraft = async ({ targetId, recordUpdatedAt = '' }) => {
 
   const draftTime = new Date(draft.updatedAt).getTime()
   const recordTime = new Date(recordUpdatedAt).getTime()
-  const draftIsRecent = Number.isNaN(recordTime) || (!Number.isNaN(draftTime) && draftTime >= recordTime)
+  const draftIsRecent =
+    Number.isNaN(recordTime) || (!Number.isNaN(draftTime) && draftTime >= recordTime)
 
   if (!draftIsRecent) return
 
@@ -250,14 +257,16 @@ const maybeRestoreDraft = async ({ targetId, recordUpdatedAt = '' }) => {
 }
 
 const currentTemplateTitle = computed(
-  () => templateOptions.find((item) => item.value === selectedTemplate.value)?.title ?? 'Clássico',
+  () => templateOptions.find((item) => item.value === selectedTemplate.value)?.title ?? 'Clássico'
 )
 
 const currentPaperTitle = computed(
-  () => paperOptions.find((item) => item.value === selectedPaper.value)?.title ?? 'A4',
+  () => paperOptions.find((item) => item.value === selectedPaper.value)?.title ?? 'A4'
 )
 
-const editorModeLabel = computed(() => (recordId.value ? 'Editando currículo salvo' : 'Novo currículo'))
+const editorModeLabel = computed(() =>
+  recordId.value ? 'Editando currículo salvo' : 'Novo currículo'
+)
 const isMobile = computed(() => display.mdAndDown.value)
 const templateChipSize = computed(() => (display.smAndDown.value ? 'default' : 'small'))
 
@@ -526,7 +535,7 @@ watch(
   async () => {
     await loadFromRoute()
   },
-  { immediate: true },
+  { immediate: true }
 )
 
 watch(
@@ -540,7 +549,7 @@ watch(
     persistDraftIfNeeded()
     startDraftAutosave()
   },
-  { immediate: true },
+  { immediate: true }
 )
 
 watch(
@@ -549,7 +558,7 @@ watch(
     if (!value) return
     notifyStorageWarning()
   },
-  { immediate: true },
+  { immediate: true }
 )
 
 onBeforeUnmount(() => {
@@ -559,7 +568,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <v-container fluid class="page-shell" :class="{ 'has-mobile-quick-actions': isMobile && !notFound }">
+  <v-container
+    fluid
+    class="page-shell"
+    :class="{ 'has-mobile-quick-actions': isMobile && !notFound }"
+  >
     <v-row>
       <v-col cols="12">
         <div class="page-heading d-flex justify-space-between align-start flex-wrap ga-3">
@@ -567,12 +580,15 @@ onBeforeUnmount(() => {
             <p class="text-overline text-primary font-weight-bold mb-1">Editor profissional</p>
             <h1 class="text-h5 font-weight-bold mb-1">Montagem detalhada de currículo</h1>
             <p class="text-body-2 text-medium-emphasis">
-              Preencha os dados em seções e salve para abrir a visualização final em uma tela dedicada.
+              Preencha os dados em seções e salve para abrir a visualização final em uma tela
+              dedicada.
             </p>
           </div>
           <div class="d-flex flex-wrap ga-2 align-center">
             <v-chip color="primary" variant="tonal">{{ editorModeLabel }}</v-chip>
-            <v-chip color="secondary" variant="flat">{{ currentTemplateTitle }} / {{ currentPaperTitle }}</v-chip>
+            <v-chip color="secondary" variant="flat"
+              >{{ currentTemplateTitle }} / {{ currentPaperTitle }}</v-chip
+            >
           </div>
         </div>
       </v-col>
@@ -581,7 +597,11 @@ onBeforeUnmount(() => {
         <v-alert type="warning" variant="tonal" class="mb-4">
           O currículo solicitado não foi encontrado. Inicie um novo ou volte para a lista.
         </v-alert>
-        <v-btn color="primary" prepend-icon="mdi-arrow-left" @click="router.push({ name: 'resumes-dashboard' })">
+        <v-btn
+          color="primary"
+          prepend-icon="mdi-arrow-left"
+          @click="router.push({ name: 'resumes-dashboard' })"
+        >
           Voltar para lista
         </v-btn>
       </v-col>
@@ -592,7 +612,9 @@ onBeforeUnmount(() => {
             <div class="pa-4 pb-2 d-flex align-center justify-space-between flex-wrap ga-2">
               <div>
                 <p class="text-subtitle-1 font-weight-bold mb-1">Conteúdo do currículo</p>
-                <p class="text-caption text-medium-emphasis">Dados pessoais, experiência, formação e seções extras.</p>
+                <p class="text-caption text-medium-emphasis">
+                  Dados pessoais, experiência, formação e seções extras.
+                </p>
               </div>
             </div>
             <v-divider />
@@ -663,9 +685,17 @@ onBeforeUnmount(() => {
               <v-sheet rounded="lg" class="mb-3 pa-3" border>
                 <div class="d-flex justify-space-between align-center mb-2">
                   <p class="text-caption font-weight-bold mb-0">Score ATS</p>
-                  <v-chip :color="atsScoreColor" size="small" variant="tonal">{{ atsScore }}%</v-chip>
+                  <v-chip :color="atsScoreColor" size="small" variant="tonal"
+                    >{{ atsScore }}%</v-chip
+                  >
                 </div>
-                <v-progress-linear :model-value="atsScore" :color="atsScoreColor" height="8" rounded class="mb-3" />
+                <v-progress-linear
+                  :model-value="atsScore"
+                  :color="atsScoreColor"
+                  height="8"
+                  rounded
+                  class="mb-3"
+                />
                 <div class="d-flex flex-column ga-1">
                   <p
                     v-for="item in atsChecklist"
@@ -682,7 +712,11 @@ onBeforeUnmount(() => {
               <v-sheet v-if="recordId" rounded="lg" class="mb-3 pa-3" border>
                 <p class="text-caption font-weight-bold mb-2">Histórico de versões</p>
                 <v-list density="compact" class="bg-transparent pa-0">
-                  <v-list-item v-for="version in visibleVersionHistory" :key="version.id" class="px-0">
+                  <v-list-item
+                    v-for="version in visibleVersionHistory"
+                    :key="version.id"
+                    class="px-0"
+                  >
                     <template #title>
                       <span class="text-caption font-weight-medium">{{ version.title }}</span>
                     </template>
@@ -703,18 +737,34 @@ onBeforeUnmount(() => {
                     </template>
                   </v-list-item>
                 </v-list>
-                <p v-if="!visibleVersionHistory.length" class="text-caption text-medium-emphasis mb-0">
+                <p
+                  v-if="!visibleVersionHistory.length"
+                  class="text-caption text-medium-emphasis mb-0"
+                >
                   Nenhuma versão anterior disponível.
                 </p>
               </v-sheet>
 
-              <v-alert v-if="hasUnsavedChanges" type="warning" density="compact" variant="tonal" class="mb-3">
+              <v-alert
+                v-if="hasUnsavedChanges"
+                type="warning"
+                density="compact"
+                variant="tonal"
+                class="mb-3"
+              >
                 Existem alterações não salvas.
               </v-alert>
 
               <div class="d-flex flex-column ga-2">
-                <v-btn color="primary" prepend-icon="mdi-content-save-outline" @click="saveEditor">Salvar currículo</v-btn>
-                <v-btn color="secondary" variant="flat" prepend-icon="mdi-eye-outline" @click="saveAndPreview">
+                <v-btn color="primary" prepend-icon="mdi-content-save-outline" @click="saveEditor"
+                  >Salvar currículo</v-btn
+                >
+                <v-btn
+                  color="secondary"
+                  variant="flat"
+                  prepend-icon="mdi-eye-outline"
+                  @click="saveAndPreview"
+                >
                   Salvar e visualizar
                 </v-btn>
                 <v-btn
@@ -726,13 +776,28 @@ onBeforeUnmount(() => {
                 >
                   Recarregar versão salva
                 </v-btn>
-                <v-btn color="secondary" variant="text" prepend-icon="mdi-lightning-bolt" @click="loadSampleData">
+                <v-btn
+                  color="secondary"
+                  variant="text"
+                  prepend-icon="mdi-lightning-bolt"
+                  @click="loadSampleData"
+                >
                   Carregar exemplo
                 </v-btn>
-                <v-btn color="error" variant="text" prepend-icon="mdi-delete-sweep-outline" @click="clearEditor">
+                <v-btn
+                  color="error"
+                  variant="text"
+                  prepend-icon="mdi-delete-sweep-outline"
+                  @click="clearEditor"
+                >
                   Limpar editor
                 </v-btn>
-                <v-btn color="default" variant="text" prepend-icon="mdi-arrow-left" @click="goToDashboard">
+                <v-btn
+                  color="default"
+                  variant="text"
+                  prepend-icon="mdi-arrow-left"
+                  @click="goToDashboard"
+                >
                   Voltar para lista
                 </v-btn>
               </div>

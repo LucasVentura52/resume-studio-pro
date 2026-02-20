@@ -59,24 +59,28 @@ const moveItem = (collection, index, direction) => {
 
 const experiencesForPreview = computed(() =>
   props.resume.experiences.filter((item) =>
-    [item.role, item.company, item.location, item.start, item.end, item.highlights].join('').trim(),
-  ),
+    [item.role, item.company, item.location, item.start, item.end, item.highlights].join('').trim()
+  )
 )
 
 const educationForPreview = computed(() =>
   props.resume.education.filter((item) =>
-    [item.degree, item.institution, item.location, item.start, item.end, item.notes].join('').trim(),
-  ),
+    [item.degree, item.institution, item.location, item.start, item.end, item.notes].join('').trim()
+  )
 )
 
 const projectsForPreview = computed(() =>
-  props.resume.projects.filter((item) => [item.name, item.role, item.link, item.description].join('').trim()),
+  props.resume.projects.filter((item) =>
+    [item.name, item.role, item.link, item.description].join('').trim()
+  )
 )
 
 const skillsForPreview = computed(() => props.resume.skills.filter((item) => item.name.trim()))
-const languagesForPreview = computed(() => props.resume.languages.filter((item) => item.name.trim()))
+const languagesForPreview = computed(() =>
+  props.resume.languages.filter((item) => item.name.trim())
+)
 const certificationsForPreview = computed(() =>
-  props.resume.certifications.filter((item) => [item.name, item.issuer, item.year].join('').trim()),
+  props.resume.certifications.filter((item) => [item.name, item.issuer, item.year].join('').trim())
 )
 
 const contactItems = computed(() => {
@@ -140,9 +144,11 @@ const sectionShortcuts = computed(() => [
   },
 ])
 
-const completedSections = computed(() => sectionShortcuts.value.filter((section) => section.done).length)
+const completedSections = computed(
+  () => sectionShortcuts.value.filter((section) => section.done).length
+)
 const completionValue = computed(() =>
-  Math.round((completedSections.value / sectionShortcuts.value.length) * 100),
+  Math.round((completedSections.value / sectionShortcuts.value.length) * 100)
 )
 
 const goToSection = (index) => {
@@ -236,7 +242,13 @@ const clearPhoto = () => {
       <v-chip size="small" color="primary" variant="outlined">{{ completionValue }}%</v-chip>
     </div>
 
-    <v-progress-linear :model-value="completionValue" rounded color="secondary" height="8" class="mb-3" />
+    <v-progress-linear
+      :model-value="completionValue"
+      rounded
+      color="secondary"
+      height="8"
+      class="mb-3"
+    />
 
     <div class="d-flex flex-wrap ga-2">
       <v-chip
@@ -260,22 +272,52 @@ const clearPhoto = () => {
       <v-expansion-panel-text>
         <v-row>
           <v-col cols="12">
-            <v-text-field v-model="resume.personal.fullName" label="Nome completo" density="compact" variant="outlined" />
+            <v-text-field
+              v-model="resume.personal.fullName"
+              label="Nome completo"
+              density="compact"
+              variant="outlined"
+            />
           </v-col>
           <v-col cols="12">
-            <v-text-field v-model="resume.personal.role" label="Cargo ou objetivo" density="compact" variant="outlined" />
+            <v-text-field
+              v-model="resume.personal.role"
+              label="Cargo ou objetivo"
+              density="compact"
+              variant="outlined"
+            />
           </v-col>
           <v-col cols="12" sm="6">
-            <v-text-field v-model="resume.personal.email" label="Email" density="compact" variant="outlined" />
+            <v-text-field
+              v-model="resume.personal.email"
+              label="Email"
+              density="compact"
+              variant="outlined"
+            />
           </v-col>
           <v-col cols="12" sm="6">
-            <v-text-field v-model="resume.personal.phone" label="Telefone" density="compact" variant="outlined" />
+            <v-text-field
+              v-model="resume.personal.phone"
+              label="Telefone"
+              density="compact"
+              variant="outlined"
+            />
           </v-col>
           <v-col cols="12">
-            <v-text-field v-model="resume.personal.location" label="Localização" density="compact" variant="outlined" />
+            <v-text-field
+              v-model="resume.personal.location"
+              label="Localização"
+              density="compact"
+              variant="outlined"
+            />
           </v-col>
           <v-col cols="12" sm="6">
-            <v-text-field v-model="resume.personal.website" label="Site/Portfólio" density="compact" variant="outlined" />
+            <v-text-field
+              v-model="resume.personal.website"
+              label="Site/Portfólio"
+              density="compact"
+              variant="outlined"
+            />
           </v-col>
           <v-col cols="12" sm="6">
             <v-text-field
@@ -286,7 +328,12 @@ const clearPhoto = () => {
             />
           </v-col>
           <v-col cols="12" sm="6">
-            <v-text-field v-model="resume.personal.github" label="GitHub (URL ou usuário)" density="compact" variant="outlined" />
+            <v-text-field
+              v-model="resume.personal.github"
+              label="GitHub (URL ou usuário)"
+              density="compact"
+              variant="outlined"
+            />
           </v-col>
           <v-col cols="12">
             <v-file-input
@@ -312,7 +359,9 @@ const clearPhoto = () => {
               >
                 Remover foto
               </v-btn>
-              <span class="text-caption text-medium-emphasis">Use uma imagem profissional em PNG, JPG ou WEBP.</span>
+              <span class="text-caption text-medium-emphasis"
+                >Use uma imagem profissional em PNG, JPG ou WEBP.</span
+              >
             </div>
           </v-col>
         </v-row>
@@ -347,7 +396,12 @@ const clearPhoto = () => {
           </v-btn>
         </div>
 
-        <v-sheet v-for="(experience, index) in resume.experiences" :key="experience.id" class="entry-form mb-3 pa-3" rounded="lg">
+        <v-sheet
+          v-for="(experience, index) in resume.experiences"
+          :key="experience.id"
+          class="entry-form mb-3 pa-3"
+          rounded="lg"
+        >
           <div class="d-flex justify-space-between align-center mb-2">
             <p class="text-caption text-medium-emphasis">Experiência {{ index + 1 }}</p>
             <div class="d-flex align-center ga-1">
@@ -385,16 +439,37 @@ const clearPhoto = () => {
           </div>
           <v-row>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="experience.role" label="Cargo" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="experience.role"
+                label="Cargo"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="experience.company" label="Empresa" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="experience.company"
+                label="Empresa"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="experience.location" label="Local" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="experience.location"
+                label="Local"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
             <v-col cols="12" sm="3">
-              <v-text-field v-model="experience.start" label="Início" type="month" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="experience.start"
+                label="Início"
+                type="month"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
             <v-col cols="12" sm="3">
               <v-text-field
@@ -407,7 +482,11 @@ const clearPhoto = () => {
               />
             </v-col>
             <v-col cols="12">
-              <v-checkbox v-model="experience.current" label="Atuo atualmente neste cargo" hide-details />
+              <v-checkbox
+                v-model="experience.current"
+                label="Atuo atualmente neste cargo"
+                hide-details
+              />
             </v-col>
             <v-col cols="12">
               <v-textarea
@@ -439,7 +518,12 @@ const clearPhoto = () => {
           </v-btn>
         </div>
 
-        <v-sheet v-for="(education, index) in resume.education" :key="education.id" class="entry-form mb-3 pa-3" rounded="lg">
+        <v-sheet
+          v-for="(education, index) in resume.education"
+          :key="education.id"
+          class="entry-form mb-3 pa-3"
+          rounded="lg"
+        >
           <div class="d-flex justify-space-between align-center mb-2">
             <p class="text-caption text-medium-emphasis">Formação {{ index + 1 }}</p>
             <div class="d-flex align-center ga-1">
@@ -477,19 +561,46 @@ const clearPhoto = () => {
           </div>
           <v-row>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="education.degree" label="Curso/Título" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="education.degree"
+                label="Curso/Título"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="education.institution" label="Instituição" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="education.institution"
+                label="Instituição"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="education.location" label="Local" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="education.location"
+                label="Local"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
             <v-col cols="12" sm="3">
-              <v-text-field v-model="education.start" label="Início" type="month" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="education.start"
+                label="Início"
+                type="month"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
             <v-col cols="12" sm="3">
-              <v-text-field v-model="education.end" label="Fim" type="month" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="education.end"
+                label="Fim"
+                type="month"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
             <v-col cols="12">
               <v-textarea
@@ -521,7 +632,12 @@ const clearPhoto = () => {
           </v-btn>
         </div>
 
-        <v-sheet v-for="(project, index) in resume.projects" :key="project.id" class="entry-form mb-3 pa-3" rounded="lg">
+        <v-sheet
+          v-for="(project, index) in resume.projects"
+          :key="project.id"
+          class="entry-form mb-3 pa-3"
+          rounded="lg"
+        >
           <div class="d-flex justify-space-between align-center mb-2">
             <p class="text-caption text-medium-emphasis">Projeto {{ index + 1 }}</p>
             <div class="d-flex align-center ga-1">
@@ -559,13 +675,28 @@ const clearPhoto = () => {
           </div>
           <v-row>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="project.name" label="Nome do projeto" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="project.name"
+                label="Nome do projeto"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
             <v-col cols="12" sm="6">
-              <v-text-field v-model="project.role" label="Papel" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="project.role"
+                label="Papel"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
             <v-col cols="12">
-              <v-text-field v-model="project.link" label="Link (opcional)" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="project.link"
+                label="Link (opcional)"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
             <v-col cols="12">
               <v-textarea
@@ -597,7 +728,12 @@ const clearPhoto = () => {
           </v-btn>
         </div>
         <v-row class="mb-4">
-          <v-col v-for="(skill, index) in resume.skills" :key="skill.id" cols="12" class="entry-form py-2 px-3">
+          <v-col
+            v-for="(skill, index) in resume.skills"
+            :key="skill.id"
+            cols="12"
+            class="entry-form py-2 px-3"
+          >
             <div class="d-flex flex-wrap ga-2 align-center">
               <v-text-field
                 v-model="skill.name"
@@ -663,7 +799,12 @@ const clearPhoto = () => {
           </v-btn>
         </div>
         <v-row>
-          <v-col v-for="(language, index) in resume.languages" :key="language.id" cols="12" class="entry-form py-2 px-3">
+          <v-col
+            v-for="(language, index) in resume.languages"
+            :key="language.id"
+            cols="12"
+            class="entry-form py-2 px-3"
+          >
             <div class="d-flex flex-wrap ga-2 align-center">
               <v-text-field
                 v-model="language.name"
@@ -776,13 +917,28 @@ const clearPhoto = () => {
           </div>
           <v-row>
             <v-col cols="12" sm="5">
-              <v-text-field v-model="certification.name" label="Nome" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="certification.name"
+                label="Nome"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
             <v-col cols="12" sm="5">
-              <v-text-field v-model="certification.issuer" label="Instituição" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="certification.issuer"
+                label="Instituição"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
             <v-col cols="12" sm="2">
-              <v-text-field v-model="certification.year" label="Ano" density="compact" variant="outlined" />
+              <v-text-field
+                v-model="certification.year"
+                label="Ano"
+                density="compact"
+                variant="outlined"
+              />
             </v-col>
           </v-row>
         </v-sheet>

@@ -4,7 +4,10 @@ const SHELL_FILES = ['/', '/index.html', '/manifest.webmanifest']
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(SHELL_CACHE).then((cache) => cache.addAll(SHELL_FILES)).then(() => self.skipWaiting()),
+    caches
+      .open(SHELL_CACHE)
+      .then((cache) => cache.addAll(SHELL_FILES))
+      .then(() => self.skipWaiting())
   )
 })
 
@@ -17,10 +20,10 @@ self.addEventListener('activate', (event) => {
           keys.map((key) => {
             if (key === SHELL_CACHE || key === STATIC_CACHE) return Promise.resolve()
             return caches.delete(key)
-          }),
-        ),
+          })
+        )
       )
-      .then(() => self.clients.claim()),
+      .then(() => self.clients.claim())
   )
 })
 
@@ -51,7 +54,7 @@ self.addEventListener('fetch', (event) => {
               headers: { 'Content-Type': 'text/plain; charset=utf-8' },
             })
           )
-        }),
+        })
     )
     return
   }
@@ -71,6 +74,6 @@ self.addEventListener('fetch', (event) => {
         .catch(() => cached)
 
       return cached || network
-    }),
+    })
   )
 })

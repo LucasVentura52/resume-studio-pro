@@ -107,7 +107,7 @@ const normalizeExperience = (value = {}) =>
       current: Boolean(value.current),
       highlights: ensureString(value.highlights),
     }),
-    value.id,
+    value.id
   )
 
 const normalizeEducation = (value = {}) =>
@@ -120,7 +120,7 @@ const normalizeEducation = (value = {}) =>
       end: ensureString(value.end),
       notes: ensureString(value.notes),
     }),
-    value.id,
+    value.id
   )
 
 const normalizeProject = (value = {}) =>
@@ -131,7 +131,7 @@ const normalizeProject = (value = {}) =>
       link: ensureString(value.link),
       description: ensureString(value.description),
     }),
-    value.id,
+    value.id
   )
 
 const normalizeSkill = (value = {}) =>
@@ -140,7 +140,7 @@ const normalizeSkill = (value = {}) =>
       name: ensureString(value.name),
       level: ensureString(value.level) || 'Intermediário',
     }),
-    value.id,
+    value.id
   )
 
 const normalizeLanguage = (value = {}) =>
@@ -149,7 +149,7 @@ const normalizeLanguage = (value = {}) =>
       name: ensureString(value.name),
       level: ensureString(value.level) || 'Intermediário',
     }),
-    value.id,
+    value.id
   )
 
 const normalizeCertification = (value = {}) =>
@@ -159,7 +159,7 @@ const normalizeCertification = (value = {}) =>
       issuer: ensureString(value.issuer),
       year: ensureString(value.year),
     }),
-    value.id,
+    value.id
   )
 
 const normalizeCollection = (items, normalizer, fallbackFactory) => {
@@ -190,7 +190,11 @@ export const normalizeResumeData = (payload = {}) => {
     projects: normalizeCollection(source.projects, normalizeProject, createProject),
     skills: normalizeCollection(source.skills, normalizeSkill, createSkill),
     languages: normalizeCollection(source.languages, normalizeLanguage, createLanguage),
-    certifications: normalizeCollection(source.certifications, normalizeCertification, createCertification),
+    certifications: normalizeCollection(
+      source.certifications,
+      normalizeCertification,
+      createCertification
+    ),
     interests: ensureString(source.interests),
   }
 }
@@ -287,7 +291,8 @@ export const createSampleResumeData = () => ({
       name: 'Kit de Design Ops',
       role: 'Criadora',
       link: '',
-      description: 'Conjunto de rituais, templates e métricas para escalar produtividade do time de design.',
+      description:
+        'Conjunto de rituais, templates e métricas para escalar produtividade do time de design.',
     }),
   ],
   skills: [

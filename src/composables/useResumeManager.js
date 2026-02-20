@@ -22,7 +22,8 @@ const state = reactive({
 const normalizeTemplateValue = (value) =>
   templateOptions.some((item) => item.value === value) ? value : 'classic'
 
-const normalizePaperValue = (value) => (paperOptions.some((item) => item.value === value) ? value : 'a4')
+const normalizePaperValue = (value) =>
+  paperOptions.some((item) => item.value === value) ? value : 'a4'
 
 const normalizeAccentValue = (value) =>
   accentOptions.some((item) => item.value === value) ? value : '#0B4F6C'
@@ -32,7 +33,8 @@ const ensureString = (value) => (typeof value === 'string' ? value : '')
 const createStorageId = () => `cv_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`
 const createHistoryId = () => `ver_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`
 
-const sortByUpdatedDesc = (left, right) => new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime()
+const sortByUpdatedDesc = (left, right) =>
+  new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime()
 const rebuildRecordIndex = () => {
   state.recordIndexById.clear()
   state.records.forEach((record, index) => {
@@ -43,7 +45,10 @@ const sortRecordsInPlace = () => {
   state.records.sort(sortByUpdatedDesc)
   rebuildRecordIndex()
 }
-const dateTimeFormatter = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+const dateTimeFormatter = new Intl.DateTimeFormat('pt-BR', {
+  dateStyle: 'short',
+  timeStyle: 'short',
+})
 const setStorageWarning = (message) => {
   state.storageWarning = String(message || '').trim()
 }
@@ -110,7 +115,7 @@ const persist = () => {
   } catch (error) {
     console.error(error)
     setStorageWarning(
-      'Não foi possível salvar no navegador. Libere espaço no dispositivo e tente novamente.',
+      'Não foi possível salvar no navegador. Libere espaço no dispositivo e tente novamente.'
     )
     return false
   }
@@ -139,7 +144,7 @@ const writeDraftStore = (store) => {
   } catch (error) {
     console.error(error)
     setStorageWarning(
-      'Não foi possível salvar o rascunho automático. Libere espaço no dispositivo e tente novamente.',
+      'Não foi possível salvar o rascunho automático. Libere espaço no dispositivo e tente novamente.'
     )
     return false
   }
@@ -168,7 +173,7 @@ const hydrate = () => {
     state.records = []
     rebuildRecordIndex()
     setStorageWarning(
-      'Não foi possível carregar os currículos salvos. O armazenamento local pode estar corrompido.',
+      'Não foi possível carregar os currículos salvos. O armazenamento local pode estar corrompido.'
     )
   }
 
@@ -225,10 +230,10 @@ const saveEditorModel = (model) => {
         paper: normalizePaperValue(model.paper),
         accentColor: normalizeAccentValue(model.accentColor),
         data: normalizedData,
-        history: [currentSnapshot, ...(Array.isArray(current.history) ? current.history : [])].slice(
-          0,
-          HISTORY_LIMIT,
-        ),
+        history: [
+          currentSnapshot,
+          ...(Array.isArray(current.history) ? current.history : []),
+        ].slice(0, HISTORY_LIMIT),
         updatedAt: now,
       }
       sortRecordsInPlace()
@@ -313,7 +318,7 @@ const restoreRecordVersion = (recordId, versionId) => {
     data: normalizeResumeData(cloneResumeData(version.data)),
     history: [currentSnapshot, ...history.filter((entry) => entry.id !== versionId)].slice(
       0,
-      HISTORY_LIMIT,
+      HISTORY_LIMIT
     ),
     updatedAt: now,
   }
@@ -332,7 +337,11 @@ const exportBackup = () => ({
 
 const importBackup = (payload, { mode = 'merge' } = {}) => {
   const source = payload && typeof payload === 'object' ? payload : null
-  const rawRecords = Array.isArray(source?.records) ? source.records : Array.isArray(source) ? source : null
+  const rawRecords = Array.isArray(source?.records)
+    ? source.records
+    : Array.isArray(source)
+      ? source
+      : null
 
   if (!rawRecords) {
     throw new Error('Arquivo de backup inválido.')
@@ -354,7 +363,10 @@ const importBackup = (payload, { mode = 'merge' } = {}) => {
 
       const existingTime = new Date(existing.updatedAt).getTime()
       const importedTime = new Date(entry.updatedAt).getTime()
-      if (Number.isNaN(importedTime) || (!Number.isNaN(existingTime) && importedTime < existingTime)) {
+      if (
+        Number.isNaN(importedTime) ||
+        (!Number.isNaN(existingTime) && importedTime < existingTime)
+      ) {
         return
       }
 

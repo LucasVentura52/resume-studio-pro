@@ -28,7 +28,20 @@ const props = defineProps({
   },
 })
 
-const monthLabels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+const monthLabels = [
+  'Jan',
+  'Fev',
+  'Mar',
+  'Abr',
+  'Mai',
+  'Jun',
+  'Jul',
+  'Ago',
+  'Set',
+  'Out',
+  'Nov',
+  'Dez',
+]
 
 const resume = computed(() => {
   const source = props.resumeData || {}
@@ -75,24 +88,30 @@ const normalizeUrl = (value, base = '') => {
 
 const experiencesForPreview = computed(() =>
   resume.value.experiences.filter((item) =>
-    [item.role, item.company, item.location, item.start, item.end, item.highlights].join('').trim(),
-  ),
+    [item.role, item.company, item.location, item.start, item.end, item.highlights].join('').trim()
+  )
 )
 
 const educationForPreview = computed(() =>
   resume.value.education.filter((item) =>
-    [item.degree, item.institution, item.location, item.start, item.end, item.notes].join('').trim(),
-  ),
+    [item.degree, item.institution, item.location, item.start, item.end, item.notes].join('').trim()
+  )
 )
 
 const projectsForPreview = computed(() =>
-  resume.value.projects.filter((item) => [item.name, item.role, item.link, item.description].join('').trim()),
+  resume.value.projects.filter((item) =>
+    [item.name, item.role, item.link, item.description].join('').trim()
+  )
 )
 
-const skillsForPreview = computed(() => resume.value.skills.filter((item) => (item.name || '').trim()))
-const languagesForPreview = computed(() => resume.value.languages.filter((item) => (item.name || '').trim()))
+const skillsForPreview = computed(() =>
+  resume.value.skills.filter((item) => (item.name || '').trim())
+)
+const languagesForPreview = computed(() =>
+  resume.value.languages.filter((item) => (item.name || '').trim())
+)
 const certificationsForPreview = computed(() =>
-  resume.value.certifications.filter((item) => [item.name, item.issuer, item.year].join('').trim()),
+  resume.value.certifications.filter((item) => [item.name, item.issuer, item.year].join('').trim())
 )
 
 const hasMainPreviewContent = computed(
@@ -100,7 +119,7 @@ const hasMainPreviewContent = computed(
     Boolean((resume.value.summary || '').trim()) ||
     experiencesForPreview.value.length > 0 ||
     educationForPreview.value.length > 0 ||
-    projectsForPreview.value.length > 0,
+    projectsForPreview.value.length > 0
 )
 
 const contactItems = computed(() => {
@@ -173,13 +192,26 @@ const photoPreviewSrc = computed(() => {
       <div class="header-main">
         <h2 class="header-name">{{ resume.personal.fullName || 'Seu nome completo' }}</h2>
         <p class="header-role">{{ resume.personal.role || 'Cargo ou especialidade' }}</p>
-        <p v-if="resume.personal.location" class="header-location">{{ resume.personal.location }}</p>
+        <p v-if="resume.personal.location" class="header-location">
+          {{ resume.personal.location }}
+        </p>
       </div>
-      <img v-if="photoPreviewSrc" :src="photoPreviewSrc" alt="Foto profissional" class="profile-avatar" />
+      <img
+        v-if="photoPreviewSrc"
+        :src="photoPreviewSrc"
+        alt="Foto profissional"
+        class="profile-avatar"
+      />
     </header>
 
     <div v-if="contactItems.length" class="quick-contacts">
-      <a v-for="contact in contactItems" :key="contact.id" :href="contact.href" target="_blank" rel="noreferrer">
+      <a
+        v-for="contact in contactItems"
+        :key="contact.id"
+        :href="contact.href"
+        target="_blank"
+        rel="noreferrer"
+      >
         <span class="icon-dot">
           <v-icon :icon="contact.icon" size="12" />
         </span>
@@ -211,7 +243,11 @@ const photoPreviewSrc = computed(() => {
 
         <section v-if="certificationsForPreview.length" class="resume-section">
           <h3 class="section-title">Certificações</h3>
-          <article v-for="certification in certificationsForPreview" :key="certification.id" class="entry compact">
+          <article
+            v-for="certification in certificationsForPreview"
+            :key="certification.id"
+            class="entry compact"
+          >
             <h4 class="entry-title">{{ certification.name }}</h4>
             <p class="entry-subtitle">
               {{ certification.issuer }}
@@ -237,7 +273,9 @@ const photoPreviewSrc = computed(() => {
           <article v-for="experience in experiencesForPreview" :key="experience.id" class="entry">
             <div class="entry-title-line">
               <h4 class="entry-title">{{ experience.role || 'Cargo' }}</h4>
-              <span class="entry-date">{{ formatPeriod(experience.start, experience.end, experience.current) }}</span>
+              <span class="entry-date">{{
+                formatPeriod(experience.start, experience.end, experience.current)
+              }}</span>
             </div>
             <p class="entry-subtitle">
               {{ experience.company || 'Empresa' }}
@@ -259,7 +297,9 @@ const photoPreviewSrc = computed(() => {
           <article v-for="education in educationForPreview" :key="education.id" class="entry">
             <div class="entry-title-line">
               <h4 class="entry-title">{{ education.degree || 'Curso' }}</h4>
-              <span class="entry-date">{{ formatPeriod(education.start, education.end, false) }}</span>
+              <span class="entry-date">{{
+                formatPeriod(education.start, education.end, false)
+              }}</span>
             </div>
             <p class="entry-subtitle">
               {{ education.institution || 'Instituição' }}
@@ -274,7 +314,13 @@ const photoPreviewSrc = computed(() => {
           <article v-for="project in projectsForPreview" :key="project.id" class="entry">
             <div class="entry-title-line">
               <h4 class="entry-title">{{ project.name || 'Projeto' }}</h4>
-              <a v-if="project.link" class="project-link" :href="normalizeUrl(project.link)" target="_blank" rel="noreferrer">
+              <a
+                v-if="project.link"
+                class="project-link"
+                :href="normalizeUrl(project.link)"
+                target="_blank"
+                rel="noreferrer"
+              >
                 Ver projeto
               </a>
             </div>
@@ -283,7 +329,10 @@ const photoPreviewSrc = computed(() => {
           </article>
         </section>
 
-        <section v-if="showEmptyState && !hasMainPreviewContent" class="resume-section empty-preview">
+        <section
+          v-if="showEmptyState && !hasMainPreviewContent"
+          class="resume-section empty-preview"
+        >
           <h3 class="section-title">Currículo em branco</h3>
           <p class="paragraph">Preencha os dados no editor para montar a versão final.</p>
         </section>

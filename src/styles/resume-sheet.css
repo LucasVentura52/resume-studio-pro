@@ -438,9 +438,7 @@
 }
 
 .layout-creative .resume-main {
-  background:
-    radial-gradient(circle at 94% -10%, rgba(12, 90, 128, 0.1), transparent 32%),
-    #ffffff;
+  background: radial-gradient(circle at 94% -10%, rgba(12, 90, 128, 0.1), transparent 32%), #ffffff;
 }
 
 .layout-creative .resume-main .section-title {

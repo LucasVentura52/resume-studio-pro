@@ -44,7 +44,10 @@ const record = computed(() => {
 
 const templateLabel = computed(() => {
   if (!record.value) return ''
-  return templateOptions.find((item) => item.value === record.value.template)?.title || record.value.template
+  return (
+    templateOptions.find((item) => item.value === record.value.template)?.title ||
+    record.value.template
+  )
 })
 
 const fitStatus = computed(() => {
@@ -206,7 +209,7 @@ watch(
   () => {
     applyOnePageFit()
   },
-  { immediate: true },
+  { immediate: true }
 )
 
 watch(
@@ -215,7 +218,7 @@ watch(
     if (!value) return
     notifyStorageWarning()
   },
-  { immediate: true },
+  { immediate: true }
 )
 
 onMounted(() => {
@@ -229,17 +232,27 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <v-container fluid class="page-shell preview-page-shell" :class="{ 'has-mobile-quick-actions': isMobile && !!record }">
+  <v-container
+    fluid
+    class="page-shell preview-page-shell"
+    :class="{ 'has-mobile-quick-actions': isMobile && !!record }"
+  >
     <v-row>
       <v-col cols="12">
         <div class="page-heading d-flex justify-space-between align-start flex-wrap ga-3">
           <div>
             <p class="text-overline text-primary font-weight-bold mb-1">Preview dedicado</p>
             <h1 class="text-h5 font-weight-bold mb-1">Visualização final do currículo</h1>
-            <p class="text-body-2 text-medium-emphasis">Revise a versão selecionada e gere PDF real com um clique.</p>
+            <p class="text-body-2 text-medium-emphasis">
+              Revise a versão selecionada e gere PDF real com um clique.
+            </p>
           </div>
           <div class="d-flex flex-wrap ga-2">
-            <v-btn variant="text" prepend-icon="mdi-arrow-left" @click="router.push({ name: 'resumes-dashboard' })">
+            <v-btn
+              variant="text"
+              prepend-icon="mdi-arrow-left"
+              @click="router.push({ name: 'resumes-dashboard' })"
+            >
               Voltar
             </v-btn>
             <v-btn
@@ -270,7 +283,11 @@ onBeforeUnmount(() => {
           <p class="text-body-2 text-medium-emphasis mb-4">
             O registro pode ter sido removido. Volte para a lista e escolha outro currículo.
           </p>
-          <v-btn color="primary" prepend-icon="mdi-arrow-left" @click="router.push({ name: 'resumes-dashboard' })">
+          <v-btn
+            color="primary"
+            prepend-icon="mdi-arrow-left"
+            @click="router.push({ name: 'resumes-dashboard' })"
+          >
             Ir para lista
           </v-btn>
         </v-card>
@@ -298,7 +315,9 @@ onBeforeUnmount(() => {
               Atualizado em {{ manager.formatRecordDateTime(record.updatedAt) }}
             </p>
 
-            <v-chip color="primary" variant="tonal" class="mb-2">Template: {{ templateLabel }}</v-chip>
+            <v-chip color="primary" variant="tonal" class="mb-2"
+              >Template: {{ templateLabel }}</v-chip
+            >
             <v-chip color="secondary" variant="flat" class="mb-4">Folha: {{ record.paper }}</v-chip>
 
             <v-switch
@@ -311,7 +330,13 @@ onBeforeUnmount(() => {
               label="Modo 1 página automático"
             />
 
-            <v-chip :color="fitStatus.color" variant="tonal" class="mb-2" role="status" aria-live="polite">
+            <v-chip
+              :color="fitStatus.color"
+              variant="tonal"
+              class="mb-2"
+              role="status"
+              aria-live="polite"
+            >
               {{ fitStatus.label }}
             </v-chip>
 
@@ -320,10 +345,20 @@ onBeforeUnmount(() => {
             </p>
 
             <div class="d-flex flex-column ga-2">
-              <v-btn color="secondary" variant="tonal" prepend-icon="mdi-content-copy" @click="duplicateCurrentRecord">
+              <v-btn
+                color="secondary"
+                variant="tonal"
+                prepend-icon="mdi-content-copy"
+                @click="duplicateCurrentRecord"
+              >
                 Duplicar
               </v-btn>
-              <v-btn color="error" variant="text" prepend-icon="mdi-delete-outline" @click="deleteCurrentRecord">
+              <v-btn
+                color="error"
+                variant="text"
+                prepend-icon="mdi-delete-outline"
+                @click="deleteCurrentRecord"
+              >
                 Excluir
               </v-btn>
             </div>
